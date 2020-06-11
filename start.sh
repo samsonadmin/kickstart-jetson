@@ -182,9 +182,7 @@ show_device_info()
 			sudo nmcli device
 			sudo nmcli con			
 			sudo lsusb 
-			sudo modem-manager.mmcli -L
-			pause
-			sudo mmcli -m $modem_id
+
 }
 
 
@@ -414,8 +412,6 @@ show_menu_advanced_options()
 			show_device_info
 			pause
 
-
-			sudo tail -4 /root/ngrok/log.txt | awk ' /addr\=/ { gsub(/url=tcp\:\/\/|url=/, ""); print $NF}' 
 			printf "IP: $myIPAddress\n";
 
 			sudo python3 info.py
@@ -931,14 +927,6 @@ if (( ${#video_camera_array[@]} == 0 )); then
 	##Todo make buzzer sound
 	
     #exit 0
-fi
-
-
-#Check if jetson_hotspot is enabled, if yes and  not activated, try to activate it
-my_jetson_hotspot=$(nmcli con show | awk ' /my_jetson_hotspot/ {print $4}')
-if [[ $my_jetson_hotspot == "--" ]]; then
-	sudo nmcli con up my_jetson_hotspot
-	sudo nmcli con mod my_jetson_hotspot connection.autoconnect yes
 fi
 
 
