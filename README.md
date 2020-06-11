@@ -1,12 +1,10 @@
-
-# Kickstart-Jetson ## Kickstart Jetson STEM Course
-
-Bootstraping the Jetson nano with Darknet Yolo
+# Kickstart-Jetson
+> Kickstart Jetson STEM Course
+> Bootstraping the Jetson nano with Darknet Yolo
 
 
 ```bash
 git clone https://github.com/samsonadmin/kickstart-jetson.git
-
 cd kickstart-jetson
 ```
 
@@ -15,7 +13,13 @@ cd kickstart-jetson
 ```bash
 ./configure-network.sh
 ```
-Automatically create Wi-Fi hotspot SSID:i_am_jetson  Password:jetsonnano
+Create Wi-Fi hotspot 
+
+|                |ASCII                      
+|----------------|-------------------------------|
+|SSID            |`**i_am_jetson**`          
+|Password        |`**jetsonnano**`           
+
 
 ```bash
 ./requirements.sh
@@ -76,11 +80,11 @@ https://github.com/rm-hull/luma.led_matrix
 
 # Manage Autostart
 
-```bash
-Add rc.local
+
+Using Linux  **rc.local**
 https://www.linuxbabe.com/linux-server/how-to-enable-etcrc-local-with-systemd
 https://vpsfix.com/community/server-administration/no-etc-rc-local-file-on-ubuntu-18-04-heres-what-to-do/
-
+```bash
 sudo vim /etc/rc.local
 #allow sending serial
 if [ -f "/dev/ttyTHS1" ]; then
@@ -96,3 +100,4 @@ fi
 ```bash
 ./start.sh
 ```
+
