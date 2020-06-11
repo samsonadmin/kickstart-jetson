@@ -55,7 +55,7 @@ yolo_detection_options[2,0]="Yolov3 - Tiny 80 Different objects (Require GUI X11
 yolo_detection_options[2,1]="~/darknet/coco.data"
 yolo_detection_options[2,2]="~/darknet/yolov3-tiny.cfg"
 yolo_detection_options[2,3]="~/darknet/yolov3-tiny.weights"
-yolo_detection_options[2,4]="-thresh 0.40 -ext_output"
+yolo_detection_options[2,4]="-thresh 0.10 -ext_output"
 
 yolo_detection_options[3,0]="Yolov3 - Tiny 80 Different objects (http://${myIPAddress}:8090)"
 yolo_detection_options[3,1]="${yolo_detection_options[2,1]}" ##same
@@ -67,7 +67,7 @@ yolo_detection_options[4,0]="Yolov3 - Tiny PRN 80 Different objects (Require GUI
 yolo_detection_options[4,1]="~/darknet/coco.data"
 yolo_detection_options[4,2]="~/darknet/yolov3-tiny-prn.cfg"
 yolo_detection_options[4,3]="~/darknet/yolov3-tiny-prn.weights"
-yolo_detection_options[4,4]="-thresh 0.40 -ext_output  "
+yolo_detection_options[4,4]="-thresh 0.10 -ext_output  "
 
 yolo_detection_options[5,0]="Yolov3 - Tiny PRN 80 Different objects (http://${myIPAddress}:8090)"
 yolo_detection_options[5,1]="${yolo_detection_options[4,1]}" ##same
@@ -890,7 +890,7 @@ build_pipeline()
 	if [ "$video_file_for_v4l2src_pipeline" != "" ]; then
 		v4l2src_ending_pipeline_str+="appsink sync=false"
 	else
-		v4l2src_ending_pipeline_str+="appsink sync=false async=false drop=true"
+		v4l2src_ending_pipeline_str+="appsink sync=false async=false"
 	fi
 
 	#v4l2src_pipeline_str+=" tee name=t t. ! nvvidconv ! omxh264enc control-rate=2  bitrate=6000000 peak-bitrate=6500000  preset-level=2 profile=8 !  'video/x-h264, stream-format=(string)byte-stream, level=(string)5.2' ! h264parse ! qtmux ! filesink location=/mnt/sandisk/$today.mov t. ! "
