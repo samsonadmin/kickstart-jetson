@@ -22,11 +22,11 @@ sudo nmcli connection delete my_jetson_hotspot
 sudo nmcli connection add type wifi ifname '*' con-name my_jetson_hotspot autoconnect no ssid jetson
 
 
-sudo nmcli connection modify jetson_hotspot 802-11-wireless.mode ap 
-sudo nmcli connection modify jetson_hotspot 802-11-wireless.channel 11 802-11-wireless.band bg 
+sudo nmcli connection modify my_jetson_hotspot 802-11-wireless.mode ap 
+sudo nmcli connection modify my_jetson_hotspot 802-11-wireless.channel 11 802-11-wireless.band bg 
 
 
-sudo nmcli connection modify jetson_hotspot 802-11-wireless-security.key-mgmt wpa-psk 802-11-wireless-security.psk jetsonnano
+sudo nmcli connection modify my_jetson_hotspot 802-11-wireless-security.key-mgmt wpa-psk 802-11-wireless-security.psk jetsonnano
 
 ##sudo nmcli con modify jetson_hotspot 802-11-wireless.mode ap 802-11-wireless.band bg ipv4.method shared
 
