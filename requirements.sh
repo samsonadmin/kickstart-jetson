@@ -94,8 +94,6 @@ sudo apt install -y \
    #gstreamer1.0-plugins-nice \
   
 
-sudo apt-get update
-
 
 sudo apt-get install libjpeg-dev zlib1g-dev
 
@@ -114,7 +112,7 @@ sudo apt-get --with-new-pkgs upgrade
 sudo apt autoremove -y
 sudo apt-get dist-upgrade -y
 
-sudo apt-get install nvidia-jetpack
+sudo apt-get install nvidia-jetpack -y
 
 
 #https://developer.ridgerun.com/wiki/index.php?title=Pose_Estimation_using_TensorRT_on_NVIDIA_Jetson
