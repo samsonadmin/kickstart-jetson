@@ -64,6 +64,7 @@ wget http://www.mail2you.net/weights/yolov3-tiny.conv.11
 
 #model
 wget https://raw.githubusercontent.com/WongKinYiu/PartialResidualNetworks/master/cfg/yolov3-tiny-prn.cfg
+wget http://www.mail2you.net/weights/yolov3-tiny.cfg
 #weights
 wget http://www.mail2you.net/weights/yolov3-tiny.weights
 
