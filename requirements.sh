@@ -5,7 +5,7 @@ sudo apt-get remove --purge libreoffice*  -y
 sudo apt-get purge apport -y
 
 sudo apt-get clean 
-sudo apt-get autoremove
+sudo apt-get autoremove -y
 sudo apt-get install -y v4l-utils
 
 
@@ -17,7 +17,7 @@ sudo apt-get upgrade -y
 sudo snap install network-manager
 
 
-sudo apt-get install libhdf5-serial-dev 
+sudo apt-get install -y libhdf5-serial-dev 
 
 #This install a lot of need libs, might save other times before installing pip3 lib
 sudo apt install -y \
@@ -95,7 +95,7 @@ sudo apt install -y \
   
 
 
-sudo apt-get install libjpeg-dev zlib1g-dev
+sudo apt-get install -y libjpeg-dev zlib1g-dev
 
 sudo -H pip install -U jetson-stats
 
@@ -108,7 +108,7 @@ sudo apt-get install -y ipython ipython-notebook
 sudo -H pip3 install -U pip testresources setuptools
 
 
-sudo apt-get --with-new-pkgs upgrade
+sudo apt-get --with-new-pkgs upgrade -y
 sudo apt autoremove -y
 sudo apt-get dist-upgrade -y
 
