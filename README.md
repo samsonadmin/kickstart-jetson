@@ -17,8 +17,8 @@ Create Wi-Fi hotspot
 
 |                |ASCII                      
 |----------------|-------------------------------|
-|SSID            |`**i_am_jetson**`          
-|Password        |`**jetsonnano**`           
+|SSID            |`i_am_jetson`          
+|Password        |`jetsonnano`           
 
 
 ```bash
