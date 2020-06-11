@@ -42,7 +42,7 @@ yolo_detection_options[0,0]="Face Mask (Require GUI X11)"
 yolo_detection_options[0,1]="~/darknet/mask2020/obj.edge.data"
 yolo_detection_options[0,2]="~/darknet/mask2020/yolov3-tiny-prn.cfg"
 yolo_detection_options[0,3]="~/darknet/mask2020/yolov3-tiny-prn-832_last.weights"
-yolo_detection_options[0,4]="-thresh 0.70 -mjpeg_port 8090 -json_port 8070 "
+yolo_detection_options[0,4]="-thresh 0.70 -ext_output "
 
 yolo_detection_options[1,0]="Face Mask No display (http://${myIPAddress}:8090)"
 yolo_detection_options[1,1]="${yolo_detection_options[0,1]}" ##same
@@ -55,25 +55,25 @@ yolo_detection_options[2,0]="Yolov3 - Tiny 80 Different objects (Require GUI X11
 yolo_detection_options[2,1]="~/darknet/coco.data"
 yolo_detection_options[2,2]="~/darknet/yolov3-tiny.cfg"
 yolo_detection_options[2,3]="~/darknet/yolov3-tiny.weights"
-yolo_detection_options[2,4]="-thresh 0.40 -mjpeg_port 8090 -json_port 8070 "
+yolo_detection_options[2,4]="-thresh 0.40 -ext_output"
 
 yolo_detection_options[3,0]="Yolov3 - Tiny 80 Different objects (http://${myIPAddress}:8090)"
 yolo_detection_options[3,1]="${yolo_detection_options[6,1]}" ##same
 yolo_detection_options[3,2]="${yolo_detection_options[6,2]}" ##same
 yolo_detection_options[3,3]="${yolo_detection_options[6,3]}" ##same
-yolo_detection_options[3,4]="-dont_show ${yolo_detection_options[6,4]} "
+yolo_detection_options[3,4]="-dont_show ${yolo_detection_options[6,4]} -mjpeg_port 8090"
 
 yolo_detection_options[4,0]="Yolov3 - Tiny PRN 80 Different objects (Require GUI X11)"
 yolo_detection_options[4,1]="~/darknet/coco.data"
 yolo_detection_options[4,2]="~/darknet/yolov3-tiny-prn.cfg"
 yolo_detection_options[4,3]="~/darknet/yolov3-tiny-prn.weights"
-yolo_detection_options[4,4]="-thresh 0.40 -mjpeg_port 8090 -json_port 8070 "
+yolo_detection_options[4,4]="-thresh 0.40 -ext_output  "
 
 yolo_detection_options[5,0]="Yolov3 - Tiny PRN 80 Different objects (http://${myIPAddress}:8090)"
 yolo_detection_options[5,1]="${yolo_detection_options[6,1]}" ##same
 yolo_detection_options[5,2]="${yolo_detection_options[6,2]}" ##same
 yolo_detection_options[5,3]="${yolo_detection_options[6,3]}" ##same
-yolo_detection_options[5,4]="-dont_show ${yolo_detection_options[6,4]} "
+yolo_detection_options[5,4]="-dont_show ${yolo_detection_options[6,4]} -mjpeg_port 8090 -json_port 8070 "
 
 
 
