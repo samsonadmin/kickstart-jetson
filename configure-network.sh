@@ -2,13 +2,13 @@
 
 clear
 
-sudo apt-get update
-sudo apt-get install v4l-utils
-sudo apt-get install gawk
-sudo apt-get install curl
+#sudo apt-get update
+#sudo apt-get install v4l-utils
+#sudo apt-get install gawk
+#sudo apt-get install curl
 
-#sudo snap install modem-manager
-sudo snap install network-manager
+
+#sudo snap install network-manager
 
 
 ##Create WiFi Hotspot connection
