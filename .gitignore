@@ -1,0 +1,10 @@
+*.log
+**/logs
+SELECTCAMERA_PID
+*.mp4
+.vscode
+__pycache__
+__pycache__/
+__pycache__/*
+
+darket-related/check.jpg
