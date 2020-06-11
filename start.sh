@@ -39,9 +39,9 @@ export DISPLAY=:0
 today=`date +%Y%m%d-%H%M%S`
 
 yolo_detection_options[0,0]="Face Mask (Require GUI X11)"
-yolo_detection_options[0,1]="~/trained-weights/mask2020/obj.edge.data"
-yolo_detection_options[0,2]="~/trained-weights/mask2020/yolov3-tiny-prn.cfg"
-yolo_detection_options[0,3]="~/trained-weights/mask2020/yolov3-tiny-prn-832_last.weights"
+yolo_detection_options[0,1]="~/darknet/mask2020/obj.edge.data"
+yolo_detection_options[0,2]="~/darknet/mask2020/yolov3-tiny-prn.cfg"
+yolo_detection_options[0,3]="~/darknet/mask2020/yolov3-tiny-prn-832_last.weights"
 yolo_detection_options[0,4]="-thresh 0.70 -mjpeg_port 8090 -json_port 8070 "
 
 yolo_detection_options[1,0]="Face Mask No display (http://${myIPAddress}:8090)"
@@ -51,23 +51,30 @@ yolo_detection_options[1,3]="${yolo_detection_options[0,3]}" ##same
 yolo_detection_options[1,4]="-dont_show ${yolo_detection_options[0,4]} "
 
 
-yolo_detection_options[6,0]="80 Different objects (Require GUI X11)"
-yolo_detection_options[6,1]="~/trained-weights/reference/coco.data"
-yolo_detection_options[6,2]="~/trained-weights/reference/yolov3-tiny.cfg"
-yolo_detection_options[6,3]="~/trained-weights/reference/yolov3-tiny.weights"
-yolo_detection_options[6,4]="-thresh 0.40 -mjpeg_port 8090 -json_port 8070 "
+yolo_detection_options[2,0]="Yolov3 - Tiny 80 Different objects (Require GUI X11)"
+yolo_detection_options[2,1]="~/darknet/coco.data"
+yolo_detection_options[2,2]="~/darknet/yolov3-tiny.cfg"
+yolo_detection_options[2,3]="~/darknet/yolov3-tiny.weights"
+yolo_detection_options[2,4]="-thresh 0.40 -mjpeg_port 8090 -json_port 8070 "
 
-yolo_detection_options[7,0]="80 Different objects (http://${myIPAddress}:8090)"
-yolo_detection_options[7,1]="${yolo_detection_options[6,1]}" ##same
-yolo_detection_options[7,2]="${yolo_detection_options[6,2]}" ##same
-yolo_detection_options[7,3]="${yolo_detection_options[6,3]}" ##same
-yolo_detection_options[7,4]="-dont_show ${yolo_detection_options[6,4]} "
+yolo_detection_options[3,0]="Yolov3 - Tiny 80 Different objects (http://${myIPAddress}:8090)"
+yolo_detection_options[3,1]="${yolo_detection_options[6,1]}" ##same
+yolo_detection_options[3,2]="${yolo_detection_options[6,2]}" ##same
+yolo_detection_options[3,3]="${yolo_detection_options[6,3]}" ##same
+yolo_detection_options[3,4]="-dont_show ${yolo_detection_options[6,4]} "
 
-yolo_detection_options[8,0]="Yolov4 80 Different objects Slow (http://${myIPAddress}:8090)"
-yolo_detection_options[8,1]="~/trained-weights/reference/coco.data"
-yolo_detection_options[8,2]="~/trained-weights/reference/yolov4.cfg"
-yolo_detection_options[8,3]="~/trained-weights/reference/yolov4.weights"
-yolo_detection_options[8,4]="-thresh 0.40 -mjpeg_port 8090 -json_port 8070 "
+yolo_detection_options[4,0]="Yolov3 - Tiny PRN 80 Different objects (Require GUI X11)"
+yolo_detection_options[4,1]="~/darknet/coco.data"
+yolo_detection_options[4,2]="~/darknet/yolov3-tiny-prn.cfg"
+yolo_detection_options[4,3]="~/darknet/yolov3-tiny-prn.weights"
+yolo_detection_options[4,4]="-thresh 0.40 -mjpeg_port 8090 -json_port 8070 "
+
+yolo_detection_options[5,0]="Yolov3 - Tiny PRN 80 Different objects (http://${myIPAddress}:8090)"
+yolo_detection_options[5,1]="${yolo_detection_options[6,1]}" ##same
+yolo_detection_options[5,2]="${yolo_detection_options[6,2]}" ##same
+yolo_detection_options[5,3]="${yolo_detection_options[6,3]}" ##same
+yolo_detection_options[5,4]="-dont_show ${yolo_detection_options[6,4]} "
+
 
 
 #pause
