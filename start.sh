@@ -485,11 +485,11 @@ show_menu_camera_functions_lv1()
 
 	function_selection=$(whiptail --backtitle "${back_title}" \
 										--title "Camera Function" \
-										--menu "Select the below functions" 25 78 14 \										
+										--menu "Select the below functions" 25 78 14 \
 										"00" "Yolo V3 Detection Selection" \
 										"01" "Direct Display to HDMI" \
 										"02" "Python Cam test CV2 ('F' fullscreen, esc quit)" \
-										"03" "Record video to ~/xxx.mov" \										
+										"03" "Record video to ~/xxx.mov" \
 										"04" "Advanced Options" \
 										"05" "Reboot" \
 										"06" "Shutdown" 3>&1 1>&2 2>&3)
