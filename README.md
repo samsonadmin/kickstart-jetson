@@ -1,31 +1,102 @@
+
 # Kickstart-Jetson
 > Kickstart Jetson STEM Course
 > Bootstraping the Jetson nano with Darknet Yolo
 
-
+# Step 1. Clone my opensource repo
+> This automatically do some magic stuffs
 ```bash
 git clone https://github.com/samsonadmin/kickstart-jetson.git
 cd kickstart-jetson
 ```
 
-## Network Configure
-
+## Step 2. Configure network, make a hotspot for easy control
+> Create Wi-Fi hotspot 
+> you might need to change the code to change ssid and password
 ```bash
 ./configure-network.sh
 ```
-Create Wi-Fi hotspot 
 
-|                |ASCII                      
-|----------------|-------------------------------|
+|                |ascii                      
+|----------------|-------------------------------
 |SSID            |`i_am_jetson`          
 |Password        |`jetsonnano`           
 
 
+# Step 3. Install required software and libraries
 ```bash
 ./requirements.sh
 ```
 
-------
+# Step 4. Download Yolo
+
+```bash
+cd
+git clone https://github.com/AlexeyAB/darknet.git
+```
+
+# Step 5. Edit Makfile
+```bash
+vim Makefile
+```
+```diff
+GPU=1
+CUDNN=1
+OPENCV=1
+OPENMP=1
+```
+```diff
+#uncomment the line
+ARCH= -gencode arch=compute_53,code=[sm_53,compute_53]
+```
+
+# Step 6. Compile the program
+```bash
+make -j4
+```
+
+# Step 7. Download models & weights 
+```bash
+#model
+wget http://www.mail2you.net/weights/yolo_v3_tiny_pan3_aa_ae_mixup_scale_giou_dropblock_mosaic.cfg.txt
+#weights
+wget http://www.mail2you.net/weights/yolov3-tiny.conv.11
+
+#model
+wget https://raw.githubusercontent.com/WongKinYiu/PartialResidualNetworks/master/cfg/yolov3-tiny-prn.cfg
+#weights
+wget http://www.mail2you.net/weights/yolov3-tiny.weights
+
+#model
+wget http://www.mail2you.net/weights/yolov3-tiny-prn.cfg
+#weights
+wget http://www.mail2you.net/weights/yolov3-tiny-prn.weights
+```
+
+# Step 8. Your first inference!
+```bash
+./darknet detector test cfg/coco.data yolov3-tiny-prn.cfg yolov3-tiny-prn.weights data/person.jpg
+```
+
+# Step 9. Lets test on video
+```bash
+./darknet detector test cfg/coco.data yolov3-tiny-prn.cfg yolov3-tiny-prn.weights data/person.jpg
+```
+
+# Step 10. Take Pictures and build your own training
+> Let's take some time and allow me to explain what are the important things you need to consider when doing your training
+> 
+
+# Step 11. Train your weight
+> However, training is almost impossible to be done on jetson nano, lets do it on cloud, we will use [Google Colab](https://colab.research.google.com/drive/1lfcAim-fHge2L9fdD49eu8LNUaAMgk4G?usp=sharing)
+```bash
+ ./darknet detector train "/training-data/face_mask/obj-google.data"  "/training-data/face_mask/yolov3-tiny-prn-832.cfg"  "/training-data/face_mask/yolov3-tiny-prn-832_last.weights" -dont_show
+ ```
+
+
+----
+----
+# Other useful scripts
 
 # GPIO
 See [https://www.jetsonhacks.com/2019/06/07/jetson-nano-gpio/](https://www.jetsonhacks.com/2019/06/07/jetson-nano-gpio/)
@@ -100,4 +171,3 @@ fi
 ```bash
 ./start.sh
 ```
-
