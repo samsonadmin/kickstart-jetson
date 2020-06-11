@@ -3,7 +3,7 @@
 > Kickstart Jetson STEM Course
 > Bootstraping the Jetson nano with Darknet Yolo
 
-# Step 1. Clone my opensource repo
+## Step 1. Clone my opensource repo
 > This automatically do some magic stuffs
 ```bash
 git clone https://github.com/samsonadmin/kickstart-jetson.git
@@ -23,19 +23,19 @@ cd kickstart-jetson
 |Password        |`jetsonnano`           
 
 
-# Step 3. Install required software and libraries
+## Step 3. Install required software and libraries
 ```bash
 ./requirements.sh
 ```
 
-# Step 4. Download Yolo
+## Step 4. Download Yolo
 
 ```bash
 cd
 git clone https://github.com/AlexeyAB/darknet.git
 ```
 
-# Step 5. Edit Makfile
+## Step 5. Edit Makefile
 ```bash
 vim Makefile
 ```
@@ -50,12 +50,12 @@ OPENMP=1
 ARCH= -gencode arch=compute_53,code=[sm_53,compute_53]
 ```
 
-# Step 6. Compile the program
+## Step 6. Compile the program
 ```bash
 make -j4
 ```
 
-# Step 7. Download models & weights 
+## Step 7. Download models & weights 
 ```bash
 #model
 wget http://www.mail2you.net/weights/yolo_v3_tiny_pan3_aa_ae_mixup_scale_giou_dropblock_mosaic.cfg.txt
@@ -73,21 +73,21 @@ wget http://www.mail2you.net/weights/yolov3-tiny-prn.cfg
 wget http://www.mail2you.net/weights/yolov3-tiny-prn.weights
 ```
 
-# Step 8. Your first inference!
+## Step 8. Your first inference!
 ```bash
 ./darknet detector test cfg/coco.data yolov3-tiny-prn.cfg yolov3-tiny-prn.weights data/person.jpg
 ```
 
-# Step 9. Lets test on video
+## Step 9. Lets test on video
 ```bash
 ./darknet detector test cfg/coco.data yolov3-tiny-prn.cfg yolov3-tiny-prn.weights data/person.jpg
 ```
 
-# Step 10. Take Pictures and build your own training
+## Step 10. Take Pictures and build your own training
 > Let's take some time and allow me to explain what are the important things you need to consider when doing your training
 > 
 
-# Step 11. Train your weight
+## Step 11. Train your weight
 > However, training is almost impossible to be done on jetson nano, lets do it on cloud, we will use [Google Colab](https://colab.research.google.com/drive/1lfcAim-fHge2L9fdD49eu8LNUaAMgk4G?usp=sharing)
 ```bash
  ./darknet detector train "/training-data/face_mask/obj-google.data"  "/training-data/face_mask/yolov3-tiny-prn-832.cfg"  "/training-data/face_mask/yolov3-tiny-prn-832_last.weights" -dont_show
@@ -98,7 +98,7 @@ wget http://www.mail2you.net/weights/yolov3-tiny-prn.weights
 ----
 # Other useful scripts
 
-# GPIO
+## GPIO
 See [https://www.jetsonhacks.com/2019/06/07/jetson-nano-gpio/](https://www.jetsonhacks.com/2019/06/07/jetson-nano-gpio/)
 See [https://github.com/NVIDIA/jetson-gpio](https://github.com/NVIDIA/jetson-gpio)
 
@@ -124,7 +124,7 @@ chmod 666 /dev/ttyTHS1
 ```
 
 
-# Enable SPI on jetson nano
+## Enable SPI on jetson nano
 
 https://github.com/gtjoseph/jetson-nano-support/tree/l4t_32.2.1
 
@@ -137,19 +137,19 @@ tar -zxvf flash-dtb-update-2019-12-09.tar.gz
 ```
 
 
-# Using the max7219 matrix LED
+## Using the max7219 matrix LED
 ```bash
 pip install luma.led_matrix
 ```
 
-# hardware:
+### hardware:
 https://raspi.tv/2013/8-x-8-led-array-driven-by-max7219-on-the-raspberry-pi-via-python
 
-# Software:
+### Software:
 https://github.com/rm-hull/luma.led_matrix
 
 
-# Manage Autostart
+## Manage Autostart
 
 
 Using Linux  **rc.local**
