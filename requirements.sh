@@ -123,3 +123,5 @@ sudo -H pip3 install Jetson.GPIO luma.led_matrix
 ## For SPI, https://github.com/gtjoseph/jetson-nano-support/tree/master
 wget https://github.com/gtjoseph/jetson-nano-support/releases/download/v1.0.2/flash-dtb-update-2019-12-09.tar.gz
 tar -zxvf flash-dtb-update-2019-12-09.tar.gz
+cd flash-dtb-update-2019-12-09
+sudo ./flashme.sh /dev/mmcblk0
