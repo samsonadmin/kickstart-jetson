@@ -1,6 +1,14 @@
 #!/bin/bash
 
-~/skip_sudo.sh
+sudo apt purge thunderbird -y
+sudo apt-get remove --purge libreoffice*  -y
+sudo apt-get purge apport -y
+
+sudo apt-get clean 
+sudo apt-get autoremove
+sudo apt-get install -y v4l-utils
+
+
 sudo apt-get update
 sudo apt-get upgrade -y
 
