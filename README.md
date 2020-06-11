@@ -71,6 +71,19 @@ wget http://www.mail2you.net/weights/yolov3-tiny.weights
 wget http://www.mail2you.net/weights/yolov3-tiny-prn.cfg
 #weights
 wget http://www.mail2you.net/weights/yolov3-tiny-prn.weights
+
+#class names
+wget http://www.mail2you.net/weights/coco.data
+wget http://www.mail2you.net/weights/classes.txt
+
+cd mask
+#class names
+wget http://www.mail2you.net/weights/mask2020/obj.edge.data
+wget http://www.mail2you.net/weights/mask2020/classes.txt
+#model
+wget http://www.mail2you.net/weights/mask2020/yolov3-tiny-prn.cfg
+#weights
+wget http://www.mail2you.net/weights/mask2020/yolov3-tiny-prn-832_final.weights
 ```
 
 ## Step 8. Your first inference!
