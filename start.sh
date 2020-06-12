@@ -57,7 +57,7 @@ yolo_detection_options[2,2]="~/darknet/enet-coco.cfg"
 yolo_detection_options[2,3]="~/darknet/enetb0-coco_final.weights"
 yolo_detection_options[2,4]="-thresh 0.40 -ext_output"
 
-yolo_detection_options[3,0]="Yolov3 - Tiny 80 Different objects (http://${myIPAddress}:8090)"
+yolo_detection_options[3,0]="EfficientNet - Tiny 80 Different objects (http://${myIPAddress}:8090)"
 yolo_detection_options[3,1]="${yolo_detection_options[2,1]}" ##same
 yolo_detection_options[3,2]="${yolo_detection_options[2,2]}" ##same
 yolo_detection_options[3,3]="${yolo_detection_options[2,3]}" ##same
