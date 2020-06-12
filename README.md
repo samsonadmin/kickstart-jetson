@@ -82,7 +82,6 @@ vim Makefile
 GPU=1
 CUDNN=1
 OPENCV=1
-OPENMP=1
 ```
 ```diff
 #uncomment the line
@@ -108,9 +107,9 @@ wget http://www.mail2you.net/weights/yolov3-tiny.cfg
 wget http://www.mail2you.net/weights/yolov3-tiny.weights
 
 #model
-wget http://www.mail2you.net/weights/yolov3-tiny-prn.cfg
+wget https://raw.githubusercontent.com/AlexeyAB/darknet/master/cfg/enet-coco.cfg
 #weights
-wget http://www.mail2you.net/weights/yolov3-tiny-prn.weights
+wget http://www.mail2you.net/weights/enetb0-coco_final.weights
 
 #class names
 wget http://www.mail2you.net/weights/coco.data
