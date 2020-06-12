@@ -4,6 +4,9 @@
 > Kickstart Jetson STEM Course
 > Bootstraping the Jetson nano with Darknet Yolo
 
+## Step 0. Download the image for NVIDIA Jetson (already prepared for you) 
+Jetson Nano Developer Kit SD Card Image [https://developer.nvidia.com/embedded/downloads](https://developer.nvidia.com/embedded/downloads)
+and burn ISO using [balenaEtcher](https://www.balena.io/etcher/)
 
 ## Step 1. Insert SD Card, connect Camera, fan, etc
 > boot up the Jetson nano
