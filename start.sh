@@ -51,11 +51,11 @@ yolo_detection_options[1,3]="${yolo_detection_options[0,3]}" ##same
 yolo_detection_options[1,4]="-dont_show ${yolo_detection_options[0,4]} "
 
 
-yolo_detection_options[2,0]="Yolov3 - Tiny 80 Different objects (Require GUI X11)"
+yolo_detection_options[2,0]="EfficientNet - 80 Different objects (Require GUI X11)"
 yolo_detection_options[2,1]="~/darknet/coco.data"
-yolo_detection_options[2,2]="~/darknet/yolov3-tiny.cfg"
-yolo_detection_options[2,3]="~/darknet/yolov3-tiny.weights"
-yolo_detection_options[2,4]="-thresh 0.10 -ext_output"
+yolo_detection_options[2,2]="~/darknet/enet-coco.cfg"
+yolo_detection_options[2,3]="~/darknet/enetb0-coco_final.weights"
+yolo_detection_options[2,4]="-thresh 0.40 -ext_output"
 
 yolo_detection_options[3,0]="Yolov3 - Tiny 80 Different objects (http://${myIPAddress}:8090)"
 yolo_detection_options[3,1]="${yolo_detection_options[2,1]}" ##same
@@ -67,7 +67,7 @@ yolo_detection_options[4,0]="Yolov3 - Tiny PRN 80 Different objects (Require GUI
 yolo_detection_options[4,1]="~/darknet/coco.data"
 yolo_detection_options[4,2]="~/darknet/yolov3-tiny-prn.cfg"
 yolo_detection_options[4,3]="~/darknet/yolov3-tiny-prn.weights"
-yolo_detection_options[4,4]="-thresh 0.10 -ext_output  "
+yolo_detection_options[4,4]="-thresh 0.40 -ext_output  "
 
 yolo_detection_options[5,0]="Yolov3 - Tiny PRN 80 Different objects (http://${myIPAddress}:8090)"
 yolo_detection_options[5,1]="${yolo_detection_options[4,1]}" ##same
