@@ -91,6 +91,16 @@ OPENCV=1
 ARCH= -gencode arch=compute_53,code=[sm_53,compute_53]
 ```
 
+```bash
+vim /root/.bashrc
+
+export CUDA_VER=10.0
+export PATH=${PATH}:/usr/local/cuda/bin
+export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:/usr/local/cuda/lib64
+
+source ~/.bashrc
+```
+
 ## Step 9. Compile the program
 ```bash
 make -j4
