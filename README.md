@@ -235,6 +235,12 @@ if [ -f "/dev/ttyUSB0" ]; then
 fi
 ```
 
+## Jetson Nano 3D printer samples
+https://www.thingiverse.com/thing:3603594
+https://www.thingiverse.com/thing:4082134
+https://www.prusaprinters.org/prints/4689-jetson-nano-case
+https://www.prusaprinters.org/prints/1420-nvidia-jetson-nano-case-nanomesh-mini
+
 # Finally
 ```bash
 ./start.sh
