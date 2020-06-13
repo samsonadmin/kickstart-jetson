@@ -119,6 +119,9 @@ wget http://www.mail2you.net/weights/yolov3-tiny.cfg
 #weights
 wget http://www.mail2you.net/weights/yolov3-tiny.weights
 
+#weights
+wget http://www.mail2you.net/weights/yolov3-tiny-prn.weights
+
 #model
 wget https://raw.githubusercontent.com/AlexeyAB/darknet/master/cfg/enet-coco.cfg
 #weights
