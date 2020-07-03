@@ -52,16 +52,18 @@ def led_matrix(display_text):
             else:
                 text(draw, (1, 1), display_text, fill="white", font=proportional(LCD_FONT))
 
+def oled(display_text):
+    global oled_ok, oled_font, oled_device
+    if oled_ok:
+        with canvas(oled_device) as draw:
+            draw.text( (0, 0), display_text, fill="white", font=oled_font)        
 
 try:
     #https://ssd1306.readthedocs.io/en/latest/python-usage.html
     serial_i2c = i2c(port=1, address=0x3c)
     oled_device = ssd1306(serial_i2c)
-    with canvas(oled_device) as draw:
-        font_path = "/home/jetsonnano/kickstart-jetson/BenchNine-Regular.ttf"
-        font = ImageFont.truetype(font_path, 25)
-        draw.text( (0, 0), "Loaded", fill="white", font=font)
-
+    oled_font = ImageFont.truetype("/home/jetsonnano/kickstart-jetson/BenchNine-Regular.ttf", 35)
+    print("Created OLED device")
     oled_ok = True
 except:
     oled_ok = False
@@ -70,7 +72,8 @@ try:
     # create matrix device
     serial = spi(port=0, device=0, gpio=noop())
     led_device = max7219(serial, width=8, height=8, rotate=1, block_orientation=0)
-    print("Created device")
+    print("Created MATRIX device")
+    oled("Loaded...")
     led_matrix_ok = True
 
 except:
@@ -190,18 +193,14 @@ def myCustomActions(detections, img):
     for detection in detections:
         print ( detection[0].decode() + " : " + str(round(detection[1] * 100, 2)) + "%" )
         if detection[0].decode() == "person" :
-            print ("a")
             led_matrix("a")
+            #oled works, but causes slowdown
+            #oled(detection[0].decode())
 
         if detection[0].decode() == "car" :
-            print ("d")
             led_matrix("d")
-
-        if oled_ok:
-            with canvas(oled_device) as draw:
-                font_path = "/home/jetsonnano/kickstart-jetson/BenchNine-Regular.ttf"
-                font = ImageFont.truetype(font_path, 40)
-                draw.text( (0, 0), detection[0].decode() , fill="white", font=font)            
+            #oled works, but causes slowdown
+            #oled(detection[0].decode())
 
 
     #If detected something
