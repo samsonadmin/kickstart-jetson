@@ -1,7 +1,15 @@
 ## 
 
-![GPIO_connector-01](http://www.mail2you.net/stem/GPIO_connector-01.jpg)
-
-![GPIO_connector-02](http://www.mail2you.net/stem/GPIO_connector-02.jpg)
-
-![GPIO_connector-03](http://www.mail2you.net/stem/GPIO_connector-03.jpg)
+![GPIO_connector-01](https://www.mail2you.net/stem/GPIO_connector-01.jpg)
+![GPIO_connector-02](https://www.mail2you.net/stem/GPIO_connector-02.jpg)
+![GPIO_connector-03](https://www.mail2you.net/stem/GPIO_connector-03.jpg)
+![GPIO_connector-buzzer-LED-01](https://www.mail2you.net/stem/GPIO_connector-buzzer-LED-01.jpg)
+![GPIO_connector-buzzer-LED-02](https://www.mail2you.net/stem/GPIO_connector-buzzer-LED-02.jpg)
+![GPIO_connector-buzzer-LED-03](https://www.mail2you.net/stem/GPIO_connector-buzzer-LED-03.jpg)
+![GPIO_connector-buzzer-LED-04](https://www.mail2you.net/stem/GPIO_connector-buzzer-LED-04.jpg)
+![GPIO_connector-buzzer-LED-05](https://www.mail2you.net/stem/GPIO_connector-buzzer-LED-05.jpg)
+![GPIO_connector-buzzer-LED-06](https://www.mail2you.net/stem/GPIO_connector-buzzer-LED-06.jpg)
+![i2c_oled_128x32-01](https://www.mail2you.net/stem/i2c_oled_128x32-01.jpg)
+![i2c_oled_128x32-02](https://www.mail2you.net/stem/i2c_oled_128x32-02.jpg)
+![i2c_oled_128x32-03](https://www.mail2you.net/stem/i2c_oled_128x32-03.jpg)
+![i2c_oled_128x32-04](https://www.mail2you.net/stem/i2c_oled_128x32-04.jpg)

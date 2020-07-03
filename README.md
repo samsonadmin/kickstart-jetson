@@ -39,11 +39,11 @@ cd kickstart-jetson
 
 ## Step 5. Back to your computer, prepare Visual Studio Code
 
-![Visual Studio Code](http://www.mail2you.net/stem/vcs01.jpg)
+![Visual Studio Code](https://www.mail2you.net/stem/vcs01.jpg)
 
-![Visual Studio Code](http://www.mail2you.net/stem/vcs02.jpg)
+![Visual Studio Code](https://www.mail2you.net/stem/vcs02.jpg)
 
-![Visual Studio Code](http://www.mail2you.net/stem/vcs03.jpg)
+![Visual Studio Code](https://www.mail2you.net/stem/vcs03.jpg)
 >c:\Users\**(your_username)**\.ssh\config
 ```bash
 Host Jetsonnano-192.168.2.1
@@ -53,22 +53,22 @@ Host Jetsonnano-192.168.2.1
 	StrictHostKeyChecking no
 ```
 
-![Visual Studio Code](http://www.mail2you.net/stem/vcs04.jpg)
+![Visual Studio Code](https://www.mail2you.net/stem/vcs04.jpg)
 
-![Visual Studio Code](http://www.mail2you.net/stem/vcs05.jpg)
+![Visual Studio Code](https://www.mail2you.net/stem/vcs05.jpg)
 
 
-![Visual Studio Code](http://www.mail2you.net/stem/vcs06.jpg)
+![Visual Studio Code](https://www.mail2you.net/stem/vcs06.jpg)
 
-![Visual Studio Code](http://www.mail2you.net/stem/vcs07.jpg)
+![Visual Studio Code](https://www.mail2you.net/stem/vcs07.jpg)
 
 
 ## Step 6. SSH (with Xshell into jetson)
-![Visual Studio Code](http://www.mail2you.net/stem/xshell01.jpg)
+![Visual Studio Code](https://www.mail2you.net/stem/xshell01.jpg)
 
-![Visual Studio Code](http://www.mail2you.net/stem/xshell02.jpg)
+![Visual Studio Code](https://www.mail2you.net/stem/xshell02.jpg)
 
-![Visual Studio Code](http://www.mail2you.net/stem/xshell03.jpg)
+![Visual Studio Code](https://www.mail2you.net/stem/xshell03.jpg)
 
 ## Step 7. Download Yolo
 
@@ -111,16 +111,16 @@ make -j4
 #model
 wget https://raw.githubusercontent.com/AlexeyAB/darknet/master/cfg/enet-coco.cfg
 #weights
-wget http://www.mail2you.net/weights/enetb0-coco_final.weights
+wget https://www.mail2you.net/weights/enetb0-coco_final.weights
 
 #class names
-wget http://www.mail2you.net/weights/coco.data
-wget http://www.mail2you.net/weights/classes.txt
+wget https://www.mail2you.net/weights/coco.data
+wget https://www.mail2you.net/weights/classes.txt
 
 cd mask
 #class names
-wget http://www.mail2you.net/weights/mask2020/obj.edge.data
-wget http://www.mail2you.net/weights/mask2020/classes.txt
+wget https://www.mail2you.net/weights/mask2020/obj.edge.data
+wget https://www.mail2you.net/weights/mask2020/classes.txt
 ```
 
 ## Step 11. Your first inference!
