@@ -8,6 +8,129 @@ import time
 import darknet
 import argparse
 
+
+###these lines are for GPIO outputs
+
+import serial
+import threading
+#for luma led display
+from luma.led_matrix.device import max7219
+from luma.core.interface.serial import spi, noop
+from luma.core.render import canvas
+from luma.core.legacy import text
+from luma.core.legacy.font import proportional, LCD_FONT
+from luma.core import legacy
+
+#for buzzer
+import Jetson.GPIO as GPIO
+
+
+def led_matrix(display_text):
+    global led_matrix_ok
+
+    #https://www.riyas.org/2013/12/online-led-matrix-font-generator-with.html
+    up_arrow_bitmap_font = [ [0x18,0x3c,0x7e,0xdb,0x99,0x99,0x18,0x18] ]
+    left_arrow_bitmap_font = [ [0x38,0x0c,0x06,0xff,0xff,0x06,0x0c,0x38] ]
+    left_turn_arrow_bitmap_font = [ [0x30,0x60,0xfc,0xfe,0x63,0x33,0x06,0x0c] ]
+    right_turn_arrow_bitmap_font = [ [0x0c,0x06,0x3f,0x7f,0xc6,0x6c,0x30,0x18] ]
+    right_arrow_bitmap_font = [ [0x18,0x0c,0x06,0xff,0xff,0x06,0x0c,0x18] ]
+    down_arrow_bitmap_font = [ [0x18,0x18,0x99,0x99,0xdb,0x7e,0x3c,0x18] ]
+    stop_arrow_bitmap_font = [ [0x3c,0x42,0x40,0x3c,0x02,0x42,0x42,0x3c] ]
+
+    if led_matrix_ok:
+        with canvas(led_device) as draw:        
+            if display_text == "w":
+                legacy.text(draw, (0, 0), "\0", fill="white", font=up_arrow_bitmap_font)
+            elif display_text == "a":
+                legacy.text(draw, (0, 0), "\0", fill="white", font=left_turn_arrow_bitmap_font)
+            elif display_text == "d":
+                legacy.text(draw, (0, 0), "\0", fill="white", font=right_turn_arrow_bitmap_font)
+            elif display_text == "s":
+                legacy.text(draw, (0, 0), "\0", fill="white", font=stop_arrow_bitmap_font)
+            else:
+                text(draw, (1, 1), display_text, fill="white", font=proportional(LCD_FONT))
+
+try:
+    # create matrix device
+    serial = spi(port=0, device=0, gpio=noop())
+    led_device = max7219(serial, width=8, height=8, rotate=1, block_orientation=0)
+    print("Created device")
+    led_matrix_ok = True
+
+except:
+    led_matrix_ok = False
+
+
+
+
+# Pin Definitions
+output_pin = 12  # BOARD pin 12, BCM pin 18
+
+last_serial_command_sent = ""
+next_serial_command_to_send = ""
+fall_detected_outer_rectangle_is_on = False
+halt_non_stop_buzzer_thread = False
+
+def buzzer_thread(beeptimes, sleeptime):
+
+    GPIO.setmode(GPIO.BCM)
+    #GPIO.setmode(GPIO.BOARD)
+    # set pin as an output pin with optional initial state of HIGH
+    GPIO.setup(output_pin, GPIO.OUT, initial=GPIO.HIGH)
+    curr_value = GPIO.HIGH
+
+    try:
+        for x in range(beeptimes):            
+            # Toggle the output every second
+            print("Outputting {} to pin {}".format(curr_value, output_pin))
+            GPIO.output(output_pin, curr_value)
+            curr_value ^= GPIO.HIGH
+            time.sleep(sleeptime)
+    finally:
+        GPIO.cleanup()
+        buzzer = threading.Thread(target=buzzer_thread, args=(2,0.02, ))
+
+
+class NonStopBuzzerThread(threading.Thread):
+    #https://www.geeksforgeeks.org/python-different-ways-to-kill-a-thread/
+
+    def __init__(self, *args, **kwargs): 
+        super(NonStopBuzzerThread, self).__init__(*args, **kwargs) 
+        self._stopper = threading.Event() 
+  
+     #  (avoid confusion)
+    def stopit(self):       
+        self._stopper.set() # ! must not use _stop
+        GPIO.output(output_pin, GPIO.LOW)       
+  
+    def stopped(self): 
+        return self._stopper.isSet() 
+  
+    def run(self): 
+        GPIO.setmode(GPIO.BCM)
+        #GPIO.setmode(GPIO.BOARD)
+        # set pin as an output pin with optional initial state of HIGH
+        GPIO.setup(output_pin, GPIO.OUT, initial=GPIO.HIGH)
+        curr_value = GPIO.HIGH        
+
+        while True:
+            if self.stopped(): 
+                return
+
+            print("Outputting {} to pin {}".format(curr_value, output_pin))
+            GPIO.output(output_pin, curr_value)
+            curr_value ^= GPIO.HIGH                     
+            time.sleep(0.5) 
+
+
+non_stop_buzzer = NonStopBuzzerThread()
+
+buzzer = threading.Thread(target=buzzer_thread, args=(2,0.04, ))
+
+
+###these lines are for GPIO outputs ends
+
+
 ##can try python3 darknet_video.py --video 'v4l2src io-mode=2 device=/dev/video0 ! video/x-raw, format=YUY2, width=1920, height=1080, framerate=60/1 ! videoconvert! appsink sync=false async=false drop=true'
 
 GST_STR = 'nvarguscamerasrc \
@@ -47,9 +170,43 @@ def cvDrawBoxes(detections, img):
 
 
 def myCustomActions(detections, img):
+    global led_matrix, non_stop_buzzer
+
     for detection in detections:
         print ( detection[0].decode() + " : " + str(round(detection[1] * 100, 2)) + "%" )
-  
+        if detection[0].decode() == "person" :
+            print ("a")
+            led_matrix("a")
+
+        if detection[0].decode() == "car" :
+            print ("d")
+            led_matrix("d")
+
+
+    #If detected something
+    if len(detections) > 0:
+
+        #make the buzzer sound
+        if not non_stop_buzzer.isAlive():                
+            non_stop_buzzer.start()
+
+        #make LED Light on P26, please use NPN transistor, don't connect directly
+        GPIO.setmode(GPIO.BCM)
+        GPIO.setup(26, GPIO.OUT, initial=GPIO.HIGH)
+
+    else:
+        #stop the buzzer
+        if non_stop_buzzer.isAlive():
+            try:
+                non_stop_buzzer.stopit()
+                non_stop_buzzer.join()
+                non_stop_buzzer = NonStopBuzzerThread() ##create a new thread
+            except:
+                pass
+
+        #make LED Light on P26 LOW, , please use NPN transistor, don't connect directly
+        GPIO.setmode(GPIO.BCM)
+        GPIO.setup(26, GPIO.OUT, initial=GPIO.LOW)
 
 def str2bool(v):
     if isinstance(v, bool):
@@ -68,6 +225,8 @@ altNames = None
 fps_time = 0
 
 WINDOW_NAME = 'Darknet Yolo'
+video_width = 1920
+video_height = 1080
 
 def main():
 
@@ -86,7 +245,7 @@ def main():
 
     configPath = "../darknet/cfg/yolov4-tiny.cfg"
     weightPath = "../darknet/yolov4-tiny.weights"
-    metaPath = "../darknet/cfg/coco.data"
+    metaPath = "../darknet/coco.data"
     
     thresh = 0.3
     if not os.path.exists(configPath):
@@ -170,7 +329,7 @@ def main():
     # Create an image we reuse for each detect
 
     if ( args.show_video == True ):
-        darknet_image = darknet.make_image(1920,1080,3)
+        darknet_image = darknet.make_image(video_width,video_height,3)
     else:
         darknet_image = darknet.make_image(darknet.network_width(netMain),
                                         darknet.network_height(netMain),3)
