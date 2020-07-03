@@ -109,20 +109,6 @@ make -j4
 ## Step 10. Download models & weights 
 ```bash
 #model
-wget http://www.mail2you.net/weights/yolo_v3_tiny_pan3_aa_ae_mixup_scale_giou_dropblock_mosaic.cfg.txt
-#weights
-wget http://www.mail2you.net/weights/yolov3-tiny.conv.11
-
-#model
-wget https://raw.githubusercontent.com/WongKinYiu/PartialResidualNetworks/master/cfg/yolov3-tiny-prn.cfg
-wget http://www.mail2you.net/weights/yolov3-tiny.cfg
-#weights
-wget http://www.mail2you.net/weights/yolov3-tiny.weights
-
-#weights
-wget http://www.mail2you.net/weights/yolov3-tiny-prn.weights
-
-#model
 wget https://raw.githubusercontent.com/AlexeyAB/darknet/master/cfg/enet-coco.cfg
 #weights
 wget http://www.mail2you.net/weights/enetb0-coco_final.weights
@@ -135,10 +121,6 @@ cd mask
 #class names
 wget http://www.mail2you.net/weights/mask2020/obj.edge.data
 wget http://www.mail2you.net/weights/mask2020/classes.txt
-#model
-wget http://www.mail2you.net/weights/mask2020/yolov3-tiny-prn.cfg
-#weights
-wget http://www.mail2you.net/weights/mask2020/yolov3-tiny-prn-832_final.weights
 ```
 
 ## Step 11. Your first inference!
