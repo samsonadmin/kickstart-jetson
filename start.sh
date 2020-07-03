@@ -15,11 +15,8 @@
 declare -A VIDEO_CAMERA_INPUTS
 declare -A yolo_detection_options
 
-#upload_detections=true
-upload_detections=false
 myIPAddress=$(ifconfig | sed -En 's/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p' | tr '\n' '|' )
 myIPAddress=${myIPAddress::-1}
-#echo 255 | sudo tee /sys/devices/pwm-fan/target_pwm
 
 v4l2src_pipeline_str=""
 v4l2src_ending_pipeline_str=""
@@ -38,43 +35,18 @@ export DISPLAY=:0
 #today=`date +%Y-%m-%d.%H:%M:%S`
 today=`date +%Y%m%d-%H%M%S`
 
-yolo_detection_options[0,0]="Face Mask (Require GUI X11)"
-yolo_detection_options[0,1]="~/darknet/mask2020/obj.edge.data"
-yolo_detection_options[0,2]="~/darknet/mask2020/yolov3-tiny-prn.cfg"
-yolo_detection_options[0,3]="~/darknet/mask2020/yolov3-tiny-prn-832_last.weights"
-yolo_detection_options[0,4]="-thresh 0.70 -ext_output "
-
-yolo_detection_options[1,0]="Face Mask No display (http://${myIPAddress}:8090)"
-yolo_detection_options[1,1]="${yolo_detection_options[0,1]}" ##same
-yolo_detection_options[1,2]="${yolo_detection_options[0,2]}" ##same
-yolo_detection_options[1,3]="${yolo_detection_options[0,3]}" ##same
-yolo_detection_options[1,4]="-dont_show ${yolo_detection_options[0,4]} "
+yolo_detection_options[0,0]="Mask (Require GUI X11)"
+yolo_detection_options[0,1]="~/darknet/mask/obj.edge.data"
+yolo_detection_options[0,2]="~/darknet/mask/yolov4-tiny.cfg"
+yolo_detection_options[0,3]="~/darknet/mask/yolov4-tiny_last.weights"
+yolo_detection_options[0,4]="-thresh 0.80 -ext_output "
 
 
-yolo_detection_options[2,0]="EfficientNet - 80 Different objects (Require GUI X11)"
-yolo_detection_options[2,1]="~/darknet/coco.data"
-yolo_detection_options[2,2]="~/darknet/enet-coco.cfg"
-yolo_detection_options[2,3]="~/darknet/enetb0-coco_final.weights"
-yolo_detection_options[2,4]="-thresh 0.40 -ext_output"
-
-yolo_detection_options[3,0]="EfficientNet - Tiny 80 Different objects (http://${myIPAddress}:8090)"
-yolo_detection_options[3,1]="${yolo_detection_options[2,1]}" ##same
-yolo_detection_options[3,2]="${yolo_detection_options[2,2]}" ##same
-yolo_detection_options[3,3]="${yolo_detection_options[2,3]}" ##same
-yolo_detection_options[3,4]="-dont_show ${yolo_detection_options[2,4]} -mjpeg_port 8090"
-
-yolo_detection_options[4,0]="Yolov3 - Tiny PRN 80 Different objects (Require GUI X11)"
-yolo_detection_options[4,1]="~/darknet/coco.data"
-yolo_detection_options[4,2]="~/darknet/yolov3-tiny-prn.cfg"
-yolo_detection_options[4,3]="~/darknet/yolov3-tiny-prn.weights"
-yolo_detection_options[4,4]="-thresh 0.40 -ext_output  "
-
-yolo_detection_options[5,0]="Yolov3 - Tiny PRN 80 Different objects (http://${myIPAddress}:8090)"
-yolo_detection_options[5,1]="${yolo_detection_options[4,1]}" ##same
-yolo_detection_options[5,2]="${yolo_detection_options[4,2]}" ##same
-yolo_detection_options[5,3]="${yolo_detection_options[4,3]}" ##same
-yolo_detection_options[5,4]="-dont_show ${yolo_detection_options[4,4]} -mjpeg_port 8090 -json_port 8070 "
-
+yolo_detection_options[1,0]="Yolov4 - Tiny Different objects (Require GUI X11)"
+yolo_detection_options[1,1]="~/darknet/cfg/coco.data"
+yolo_detection_options[1,2]="~/darknet/cfg/yolov4-tiny.cfg"
+yolo_detection_options[1,3]="~/darknet/yolov4-tiny.weights"
+yolo_detection_options[1,4]="-thresh 0.60 -ext_output "
 
 
 #pause
@@ -88,8 +60,6 @@ printf "./select-camera.sh once :::: Auto start, without restart\n"
 printf "./select-camera.sh stop :::: stop and quit loop\n"
 printf "once defaults to /dev/video0\n\n"
 }
-
-#sudo sh -c "echo -1 > /sys/module/usbcore/parameters/autosuspend"
 
 
 nvvidconv_flip=""
@@ -315,7 +285,6 @@ show_menu_advanced_options()
 										"00" "Rotate Camera 180 (Current:${nvvidconv_flip})" \
 										"01" "Resize the source (Current:${resize_to_resolution})" \
 										"02" "Toggle Power Mode(Current: ${current_power_mode})" \
-										"03" "Toggle Post to server(Current: ${upload_detections})" \
 										"04" "Network Configurator" \
 										"05" "Reset onboard camera with nvargus-daemon" \
 										"06" "Show info" \
@@ -489,13 +458,14 @@ show_menu_camera_functions_lv1()
 	function_selection=$(whiptail --backtitle "${back_title}" \
 										--title "Camera Function" \
 										--menu "Select the below functions" 25 78 14 \
-										"00" "Yolo V3 Detection Selection" \
-										"01" "Direct Display to HDMI" \
-										"02" "Python Cam test CV2 ('F' fullscreen, esc quit)" \
-										"03" "Record video to ~/xxx.mov" \
-										"04" "Advanced Options" \
-										"05" "Reboot" \
-										"06" "Shutdown" 3>&1 1>&2 2>&3)
+										"00" "Sample Python YoloV4 Detection" \
+										"01" "Advanced Python YoloV4 Detection" \
+										"02" "YoloV4 Detection Selection" \
+										"03" "Direct Display to HDMI" \
+										"04" "Python Cam test CV2 ('F' fullscreen, esc quit)" \
+										"05" "Advanced Options" \
+										"06" "Reboot" \
+										"07" "Shutdown" 3>&1 1>&2 2>&3)
 
 	case $function_selection in
 		"") 
@@ -505,24 +475,43 @@ show_menu_camera_functions_lv1()
 			exit 0
 		;;
 
+
 		00)
 			clear
-			echo "Yolo V3 Inference"
-			show_menu_yolov3_detection_options
+			echo "YoloV4 Inference"
+			case ${VIDEO_CAMERA_INPUTS[$camera_num,2]} in
+				"RG10")
+					v4l2src_pipeline_str=${v4l2src_pipeline_str//\'/''} ##remove the ' for nvarguscamerasrc
+				;;
+			esac
+			execute_str="python3 darknet_video.py --show_video t --video '$v4l2src_pipeline_str $v4l2src_ending_pipeline_str'"
+			printf "\nDebug: $execute_str\n"
+			cd ~/kickstart-jetson
+			eval $execute_str
 		;;
 
 		01)
 			clear
-			##nvoverlaysink	##fullscreen, fast
-			##nveglglessink	##non fullscreen, slow
-			##nv3dsink fast? can use drop=true
-			##nvvideosink
-			##xvimagesink
+			echo "YoloV4 Inference"
+			case ${VIDEO_CAMERA_INPUTS[$camera_num,2]} in
+				"RG10")
+					v4l2src_pipeline_str=${v4l2src_pipeline_str//\'/''} ##remove the ' for nvarguscamerasrc
+				;;
+			esac
+			execute_str="python3 darknet_video_advanced.py --show_video t --video '$v4l2src_pipeline_str $v4l2src_ending_pipeline_str'"
+			printf "\nDebug: $execute_str\n"
+			cd ~/kickstart-jetson
+			eval $execute_str
+		;;
 
-			#v4l2src_display_str="v4l2src io-mode=2 device=${VIDEO_CAMERA_INPUTS[$camera_num,0]} do-timestamp=true ! image/jpeg, width=${VIDEO_CAMERA_INPUTS[$camera_num,5]}, height=${VIDEO_CAMERA_INPUTS[$camera_num,6]}, framerate=$framerate/1 ! jpegparse ! nvjpegdec ! video/x-raw ! nvvidconv ! 'video/x-raw(memory:NVMM), format=(string)I420' ! nvvidconv ! 'video/x-raw(memory:NVMM), format=(string)NV12' ! nvoverlaysink sync=false async=false"	
+		02)
+			clear
+			echo "Yolo V4 Inference"
+			show_menu_yolov3_detection_options
+		;;
 
-			#logo overlay
-			#v4l2src_pipeline_str+="gdkpixbufoverlay location=~/kickstart-jetson/carryai-simple-dark.png offset-x=-1 offset-y=1 ! "
+		03)
+			clear
 
 			execute_str="gst-launch-1.0 $v4l2src_pipeline_str nvvidconv ! 'video/x-raw(memory:NVMM), format=(string)NV12' ! nvoverlaysink sync=false async=false -e"
 
@@ -538,7 +527,7 @@ show_menu_camera_functions_lv1()
 		;;
 
 
-		02)
+		04)
 			clear
 			echo "Simple Python CV2 Test"
 			case ${VIDEO_CAMERA_INPUTS[$camera_num,2]} in
@@ -554,34 +543,11 @@ show_menu_camera_functions_lv1()
 
 
 
-		03)
-			clear
-			echo "Recording Live"
-			today=`date +%Y%m%d-%H%M%S`
-			FILE="~/LIVE-Recording-$today.mp4"
-			sudo mount /dev/sda1 /media/5a5cff49-52fe-4e32-b1dc-886e34ce958b
-			if [[ -d "/media/5a5cff49-52fe-4e32-b1dc-886e34ce958b" ]]; then
-				echo "/media/5a5cff49-52fe-4e32-b1dc-886e34ce958b exist"
-				FILE="/media/5a5cff49-52fe-4e32-b1dc-886e34ce958b/LIVE-Recording-$today.mp4"
-			fi
-			
-			#execute_str="sudo gst-launch-1.0 -e $v4l2src_pipeline_str nvvidconv ! 'video/x-raw(memory:NVMM), width=1920, height=1080, format=NV12, framerate=$framerate/1' !  tee name=t  t. ! nvv4l2h265enc bitrate=9800000 ! h265parse ! qtmux ! filesink location=$FILE -e  t. ! nvoverlaysink sync=false async=false -e "
-
-			execute_str="sudo gst-launch-1.0 -e $v4l2src_pipeline_str nvvidconv ! 'video/x-raw(memory:NVMM), format=NV12, framerate=$framerate/1' !  tee name=t  t. ! nvv4l2h265enc bitrate=9800000 ! h265parse ! qtmux ! filesink location=$FILE -e  t. ! nvoverlaysink sync=false async=false -e "
-
-
-			printf "\nDebug: $execute_str\n"
-			cd ~
-			eval $execute_str
-		;;
-
-
-
-		04)
+		05)
 			show_menu_advanced_options
 		;;
 
-		05)
+		06)
 			clear
 			printf "Reboot in 2s\n";
 			sleep 2
@@ -590,7 +556,7 @@ show_menu_camera_functions_lv1()
 
 		;;
 
-		06)
+		07)
 			clear
 			printf "Shutdown in 3s\n";
 			sleep 3
@@ -608,16 +574,18 @@ show_menu_camera_functions_lv1()
 
 
 ###################
-#Yolo v3 different detection options
+#Yolo v4 different detection options
 ###################
 show_menu_yolov3_detection_options()
 {
+	cd ~/darknet
 
-	##remove older files than 2 days
-	if [[ -d "/home/jetsonnano/images" ]]; then
-		sudo find /home/jetsonnano/images -name "*.jpg" -type f -mtime +2 -exec rm -f {} \;
+	if [[ -f "yolov4-tiny.weights" ]]; then
+		echo "YoloV4-tiny weights exists."
+	else
+		cd ~/darknet
+		wget https://github.com/AlexeyAB/darknet/releases/download/darknet_yolo_v4_pre/yolov4-tiny.weights -O yolov4-tiny.weights
 	fi
-
 
 	back_title="Chosen Camera: ${VIDEO_CAMERA_INPUTS[$camera_num,1]} ${VIDEO_CAMERA_INPUTS[$camera_num,0]} ${VIDEO_CAMERA_INPUTS[$camera_num,5]}x${VIDEO_CAMERA_INPUTS[$camera_num,6]}@${VIDEO_CAMERA_INPUTS[$camera_num,7]}fps"
 
@@ -672,19 +640,6 @@ show_menu_yolov3_detection_options()
 	EOF
 	)
 
-	if [[ $upload_detections == true ]]; then
-		upload_detection_str=$(cat <<-EOF
-  			-prefix ~/images/d${today} | gawk -F: '/JETSON_NANO_DETECTION:[.]*/ { gsub(/,\s\W/, ":"); gsub(/,\s/, ","); system("~/kickstart-jetson/send_http.sh " "\"" \$2 "\" " \$3)} '
-		EOF
-		)
-	else
-		##remove the prefix arg
-		#execute_str=${execute_str//-prefix/_prefix}
-		upload_detection_str=""
-	fi
-
-	execute_str+="$upload_detection_str"
-
 
 	#1>&2
 	#&>/dev/null &
@@ -698,18 +653,7 @@ show_menu_yolov3_detection_options()
 
 	printf "\nDebug:\n$execute_str\n\n"
 
-	echo "$v4l2src_pipeline_str" >> ~/kickstart-jetson/launch.log
-	echo "" >> ~/kickstart-jetson/launch.log
-	echo "$execute_str" >> ~/kickstart-jetson/launch.log
-	echo "" >> ~/kickstart-jetson/launch.log
-
-	darknet_pid=$(pgrep darknet)
-	sudo pgrep darknet
-
-	echo "$darknet_pid" >> ~/kickstart-jetson/launch.log
-
-	echo "**********************" >> ~/kickstart-jetson/launch.log
-	echo "" >> ~/kickstart-jetson/launch.log
+	echo "$execute_str" > ~/kickstart-jetson/launch.log
 
 	cd ~/darknet	
 	eval $execute_str
