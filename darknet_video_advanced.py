@@ -15,11 +15,13 @@ import serial
 import threading
 #for luma led display
 from luma.led_matrix.device import max7219
-from luma.core.interface.serial import spi, noop
+from luma.core.interface.serial import i2c, spi, noop
 from luma.core.render import canvas
 from luma.core.legacy import text
 from luma.core.legacy.font import proportional, LCD_FONT
 from luma.core import legacy
+from luma.oled.device import ssd1306
+from PIL import Image, ImageDraw, ImageFont
 
 #for buzzer
 import Jetson.GPIO as GPIO
@@ -50,6 +52,20 @@ def led_matrix(display_text):
             else:
                 text(draw, (1, 1), display_text, fill="white", font=proportional(LCD_FONT))
 
+
+try:
+    #https://ssd1306.readthedocs.io/en/latest/python-usage.html
+    serial_i2c = i2c(port=1, address=0x3c)
+    oled_device = ssd1306(serial_i2c)
+    with canvas(oled_device) as draw:
+        font_path = "/home/jetsonnano/kickstart-jetson/BenchNine-Regular.ttf"
+        font = ImageFont.truetype(font_path, 25)
+        draw.text( (0, 0), "Loaded", fill="white", font=font)
+
+    oled_ok = True
+except:
+    oled_ok = False
+
 try:
     # create matrix device
     serial = spi(port=0, device=0, gpio=noop())
@@ -59,7 +75,6 @@ try:
 
 except:
     led_matrix_ok = False
-
 
 
 
@@ -181,6 +196,12 @@ def myCustomActions(detections, img):
         if detection[0].decode() == "car" :
             print ("d")
             led_matrix("d")
+
+        if oled_ok:
+            with canvas(oled_device) as draw:
+                font_path = "/home/jetsonnano/kickstart-jetson/BenchNine-Regular.ttf"
+                font = ImageFont.truetype(font_path, 40)
+                draw.text( (0, 0), detection[0].decode() , fill="white", font=font)            
 
 
     #If detected something
@@ -341,6 +362,15 @@ def main():
         if cv2.getWindowProperty(WINDOW_NAME, 0) < 0:
             # Check to see if the user has closed the window
             # If yes, terminate the program
+
+            #stop the buzzer
+            if non_stop_buzzer.isAlive():
+                try:
+                    non_stop_buzzer.stopit()
+                    non_stop_buzzer.join()
+                except:
+                    pass        
+            break            
             break      
 
         prev_time = time.time()
@@ -398,6 +428,13 @@ def main():
 
         key = cv2.waitKey(1)
         if key == 27 or key == ord("q"): # ESC 
+            #stop the buzzer
+            if non_stop_buzzer.isAlive():
+                try:
+                    non_stop_buzzer.stopit()
+                    non_stop_buzzer.join()
+                except:
+                    pass        
             break
 
         
