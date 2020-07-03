@@ -82,9 +82,9 @@ def main():
     global metaMain, netMain, altNames
     global fps_time
 
-    configPath = "../../trained-weights/reference/yolov4-tiny.cfg"
-    weightPath = "../../trained-weights/reference/yolov4-tiny.weights"
-    metaPath = "../../trained-weights/reference/coco.data"
+    configPath = "../trained-weights/reference/yolov4-tiny.cfg"
+    weightPath = "../trained-weights/reference/yolov4-tiny.weights"
+    metaPath = "../trained-weights/reference/coco.data"
     thresh = 0.3
     if not os.path.exists(configPath):
         raise ValueError("Invalid config path `" +
