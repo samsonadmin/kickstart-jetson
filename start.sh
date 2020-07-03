@@ -484,9 +484,9 @@ show_menu_camera_functions_lv1()
 					v4l2src_pipeline_str=${v4l2src_pipeline_str//\'/''} ##remove the ' for nvarguscamerasrc
 				;;
 			esac
-			execute_str="python3 darknet_video.py --show_video t --video '$v4l2src_pipeline_str $v4l2src_ending_pipeline_str'"
+			execute_str="python3 ~/kickstart-jetson/darknet_video.py --show_video t --video '$v4l2src_pipeline_str $v4l2src_ending_pipeline_str'"
 			printf "\nDebug: $execute_str\n"
-			cd ~/kickstart-jetson
+			cd ~/darknet
 			eval $execute_str
 		;;
 
@@ -498,9 +498,9 @@ show_menu_camera_functions_lv1()
 					v4l2src_pipeline_str=${v4l2src_pipeline_str//\'/''} ##remove the ' for nvarguscamerasrc
 				;;
 			esac
-			execute_str="python3 darknet_video_advanced.py --show_video t --video '$v4l2src_pipeline_str $v4l2src_ending_pipeline_str'"
+			execute_str="python3 ~/kickstart-jetson/darknet_video_advanced.py --show_video t --video '$v4l2src_pipeline_str $v4l2src_ending_pipeline_str'"
 			printf "\nDebug: $execute_str\n"
-			cd ~/kickstart-jetson
+			cd ~/darknet
 			eval $execute_str
 		;;
 
