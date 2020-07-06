@@ -556,7 +556,7 @@ show_menu_camera_functions_lv1()
 			FILE="~/test-videos/LIVE-Recording-$today.mp4"
 
 
-			execute_str="sudo gst-launch-1.0 -e $v4l2src_pipeline_str nvvidconv !  tee name=t  t. ! nvv4l2h265enc bitrate=5800000 ! h265parse ! qtmux ! filesink location=$FILE -e  t. ! nvoverlaysink sync=false async=false -e "
+			execute_str="gst-launch-1.0 -e $v4l2src_pipeline_str nvvidconv !  tee name=t  t. ! nvv4l2h265enc bitrate=5800000 ! h265parse ! qtmux ! filesink location=$FILE -e  t. ! nvoverlaysink sync=false async=false -e "
 
 
 			printf "\nDebug: $execute_str\n"

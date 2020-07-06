@@ -186,14 +186,12 @@ def myCustomActions(detections, img):
     for detection in detections:
         print ( detection[0].decode() + " : " + str(round(detection[1] * 100, 2)) + "%" )
         if detection[0].decode() == "person" :
-            pass
-            #led_matrix("a")
+            led_matrix("a")
             #oled works, but causes slowdown
             #oled(detection[0].decode())
 
         if detection[0].decode() == "car" :
-            pass
-            #led_matrix("d")
+            led_matrix("d")
             #oled works, but causes slowdown
             #oled(detection[0].decode())
 
@@ -206,8 +204,8 @@ def myCustomActions(detections, img):
             non_stop_buzzer.start()
 
         #make LED Light on P26, please use NPN transistor, don't connect directly
-        #GPIO.setmode(GPIO.BCM)
-        #GPIO.setup(26, GPIO.OUT, initial=GPIO.HIGH)
+        GPIO.setmode(GPIO.BCM)
+        GPIO.setup(26, GPIO.OUT, initial=GPIO.HIGH)
 
     else:
         #stop the buzzer
@@ -220,8 +218,8 @@ def myCustomActions(detections, img):
                 pass
 
         #make LED Light on P26 LOW, , please use NPN transistor, don't connect directly
-        #GPIO.setmode(GPIO.BCM)
-        #GPIO.setup(26, GPIO.OUT, initial=GPIO.LOW)
+        GPIO.setmode(GPIO.BCM)
+        GPIO.setup(26, GPIO.OUT, initial=GPIO.LOW)
 
 def str2bool(v):
     if isinstance(v, bool):
