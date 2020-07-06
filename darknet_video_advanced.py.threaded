@@ -1,3 +1,5 @@
+from imutils.video import FileVideoStream
+from imutils.video import FPS
 from ctypes import *
 import math
 import random
@@ -152,6 +154,7 @@ buzzer = threading.Thread(target=buzzer_thread, args=(2,0.04, ))
 ##can try python3 darknet_video.py --video 'v4l2src io-mode=2 device=/dev/video0 ! video/x-raw, format=YUY2, width=1920, height=1080, framerate=60/1 ! videoconvert! appsink sync=false async=false drop=true'
 
 
+
 def convertBack(x, y, w, h):
     xmin = int(round(x - (w / 2)))
     xmax = int(round(x + (w / 2)))
@@ -186,14 +189,12 @@ def myCustomActions(detections, img):
     for detection in detections:
         print ( detection[0].decode() + " : " + str(round(detection[1] * 100, 2)) + "%" )
         if detection[0].decode() == "person" :
-            pass
-            #led_matrix("a")
+            led_matrix("a")
             #oled works, but causes slowdown
             #oled(detection[0].decode())
 
         if detection[0].decode() == "car" :
-            pass
-            #led_matrix("d")
+            led_matrix("d")
             #oled works, but causes slowdown
             #oled(detection[0].decode())
 
@@ -301,10 +302,14 @@ def main():
 
     if ( not args.video == "" ):
         print("Loading: {}". format(args.video))
-        cap = cv2.VideoCapture(args.video, cv2.CAP_GSTREAMER)
+        #cap = cv2.VideoCapture(args.video, cv2.CAP_GSTREAMER)
+        print("[INFO] starting video file thread...")
+        cap = FileVideoStream(args.video).start()        
     else:
         print("Loading: {}". format(GST_STR))
-        cap = cv2.VideoCapture(GST_STR, cv2.CAP_GSTREAMER)
+        #cap = cv2.VideoCapture(GST_STR, cv2.CAP_GSTREAMER)
+        print("[INFO] starting video file thread...")
+        cap = FileVideoStream(args.video).start()          
         #cap = cv2.VideoCapture("v4l2src io-mode=2 device=/dev/video0 ! video/x-raw, format=YUY2, width=1920, height=1080, framerate=60/1 !  nvvidconv ! video/x-raw(memory:NVMM), format=(string)I420 ! nvvidconv ! video/x-raw, format=(string)BGRx ! videoconvert ! video/x-raw, format=BGR ! appsink sync=false async=false drop=true")
 
     #cap = cv2.VideoCapture("test.mp4")
@@ -329,7 +334,7 @@ def main():
         
 
         if ( args.show_video == True ):
-            out_video = cv2.VideoWriter( args.save_video , fourcc, 30, (video_width, video_height))
+            out_video = cv2.VideoWriter( args.save_video , fourcc, 30, (1920, 1080))
         else:
             out_video = cv2.VideoWriter( args.save_video , fourcc, 30, (darknet.network_width(netMain), darknet.network_height(netMain)))
 
@@ -343,17 +348,16 @@ def main():
 
     # Create an image we reuse for each detect
 
-    if ( args.show_video == True ):   
+    if ( args.show_video == True ):
         darknet_image = darknet.make_image(video_width,video_height,3)
     else:
         darknet_image = darknet.make_image(darknet.network_width(netMain),
                                         darknet.network_height(netMain),3)
 
     
-
-
                                     
-    while True:
+    #while True:
+    while cap.more():
 
         if cv2.getWindowProperty(WINDOW_NAME, 0) < 0:
             # Check to see if the user has closed the window
@@ -370,10 +374,11 @@ def main():
             break      
 
         prev_time = time.time()
-        ret, frame_read = cap.read()
+        #ret, frame_read = cap.read()
+        frame_read = cap.read()
 
-        if ret != True:
-            break
+        #if ret != True:
+        #    break
                     
         frame_rgb = cv2.cvtColor(frame_read, cv2.COLOR_BGR2RGB)
 
@@ -414,6 +419,7 @@ def main():
         #resized = cv2.resize(image, dim, interpolation = cv2.INTER_LINEAR)
     
         cv2.imshow(WINDOW_NAME, image)
+        
 
         if ( not args.save_video == "" ):
             out_video.write(image)
@@ -434,7 +440,8 @@ def main():
             break
 
         
-    cap.release()
+    #cap.release()
+    cap.stop()
 
 
     if ( not args.save_video == "" ):

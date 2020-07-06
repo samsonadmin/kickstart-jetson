@@ -48,7 +48,7 @@ def cvDrawBoxes(detections, img):
 
 def myCustomActions(detections, img):
     for detection in detections:
-        print ( detection[0].decode() + " : " + str(round(detection[1] * 100, 2)) + "%" )
+        print ( detection[0].decode() + " ::::===++ " + str(round(detection[1] * 100, 2)) + "%" )
   
 
 def str2bool(v):
@@ -128,6 +128,7 @@ def main():
     if ( not args.video == "" ):
         print("Loading: {}". format(args.video))
         cap = cv2.VideoCapture(args.video, cv2.CAP_GSTREAMER)
+        
     else:
         print("Loading: {}". format(GST_STR))
         cap = cv2.VideoCapture(GST_STR, cv2.CAP_GSTREAMER)

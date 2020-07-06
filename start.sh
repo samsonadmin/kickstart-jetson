@@ -458,14 +458,15 @@ show_menu_camera_functions_lv1()
 	function_selection=$(whiptail --backtitle "${back_title}" \
 										--title "Camera Function" \
 										--menu "Select the below functions" 25 78 14 \
-										"00" "Sample Python YoloV4 Detection" \
+										"00" "Advanced Python YoloV4 Detection Fast" \
 										"01" "Advanced Python YoloV4 Detection" \
 										"02" "YoloV4 Detection Selection" \
 										"03" "Direct Display to HDMI" \
 										"04" "Python Cam test CV2 ('F' fullscreen, esc quit)" \
-										"05" "Advanced Options" \
-										"06" "Reboot" \
-										"07" "Shutdown" 3>&1 1>&2 2>&3)
+										"05" "Record video to ~/xxx.mov" \
+										"06" "Advanced Options" \
+										"07" "Reboot" \
+										"08" "Shutdown" 3>&1 1>&2 2>&3)
 
 	case $function_selection in
 		"") 
@@ -484,7 +485,7 @@ show_menu_camera_functions_lv1()
 					v4l2src_pipeline_str=${v4l2src_pipeline_str//\'/''} ##remove the ' for nvarguscamerasrc
 				;;
 			esac
-			execute_str="python3 ~/kickstart-jetson/darknet_video.py --show_video t --video '$v4l2src_pipeline_str $v4l2src_ending_pipeline_str'"
+			execute_str="python3 ~/kickstart-jetson/darknet_video_advanced.py --show_video f --video '$v4l2src_pipeline_str $v4l2src_ending_pipeline_str'"
 			printf "\nDebug: $execute_str\n"
 			cd ~/darknet
 
@@ -547,13 +548,27 @@ show_menu_camera_functions_lv1()
 			eval $execute_str
 		;;
 
-
-
 		05)
-			show_menu_advanced_options
+			clear
+			echo "Recording Live"
+			today=`date +%Y%m%d-%H%M%S`
+			mkdir ~/test-videos/
+			FILE="~/test-videos/LIVE-Recording-$today.mp4"
+
+
+			execute_str="sudo gst-launch-1.0 -e $v4l2src_pipeline_str nvvidconv !  tee name=t  t. ! nvv4l2h265enc bitrate=5800000 ! h265parse ! qtmux ! filesink location=$FILE -e  t. ! nvoverlaysink sync=false async=false -e "
+
+
+			printf "\nDebug: $execute_str\n"
+			cd ~
+			eval $execute_str
 		;;
 
 		06)
+			show_menu_advanced_options
+		;;
+
+		07)
 			clear
 			printf "Reboot in 2s\n";
 			sleep 2
@@ -562,7 +577,7 @@ show_menu_camera_functions_lv1()
 
 		;;
 
-		07)
+		08)
 			clear
 			printf "Shutdown in 3s\n";
 			sleep 3
@@ -721,7 +736,10 @@ build_pipeline()
 
 		"RG10")
 			#onboard camera completely different
-			v4l2src_pipeline_str="nvarguscamerasrc ! 'video/x-raw(memory:NVMM), width=(int)3264, height=(int)1848, format=(string)NV12, framerate=(fraction)28/1' ! nvvidconv flip-method=2 ! 'video/x-raw, format=(string)BGRx, width=(int)1920, height=(int)1080' ! "			
+			v4l2src_pipeline_str="nvarguscamerasrc ! 'video/x-raw(memory:NVMM), width=(int)3264, height=(int)1848, format=(string)NV12, framerate=(fraction)15/1' ! nvvidconv flip-method=2 ! 'video/x-raw, format=(string)BGRx, width=(int)1920, height=(int)1080' ! "			
+
+			#Zoom in
+			v4l2src_pipeline_str="nvarguscamerasrc ! 'video/x-raw(memory:NVMM), width=(int)1280, height=(int)720, format=(string)NV12, framerate=(fraction)15/1' ! nvvidconv flip-method=2 ! 'video/x-raw, format=(string)BGRx, width=(int)1280, height=(int)720' ! "					
 		;;
 
 		"YUYV")
@@ -840,7 +858,7 @@ build_pipeline()
 	if [ "$video_file_for_v4l2src_pipeline" != "" ]; then
 		v4l2src_ending_pipeline_str+="appsink sync=false"
 	else
-		v4l2src_ending_pipeline_str+="appsink sync=false async=false"
+		v4l2src_ending_pipeline_str+="appsink max-buffers=1 drop=true sync=false"
 	fi
 
 	#v4l2src_pipeline_str+=" tee name=t t. ! nvvidconv ! omxh264enc control-rate=2  bitrate=6000000 peak-bitrate=6500000  preset-level=2 profile=8 !  'video/x-h264, stream-format=(string)byte-stream, level=(string)5.2' ! h264parse ! qtmux ! filesink location=/mnt/sandisk/$today.mov t. ! "
