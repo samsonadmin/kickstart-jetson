@@ -85,7 +85,7 @@ except:
 
 
 # Pin Definitions
-output_pin = 18  # BOARD pin 12, BCM pin 18
+output_pin0 = 18  # BOARD pin 12, BCM pin 18
 output_pin1 = 17  # BOARD pin 11, BCM pin 17		# added CWY 2020-08-07
 
 last_serial_command_sent = ""
@@ -93,121 +93,28 @@ next_serial_command_to_send = ""
 fall_detected_outer_rectangle_is_on = False
 halt_non_stop_buzzer_thread = False
 
-def buzzer_thread_F(beeptimes, sleeptime):
+GPIO.setmode(GPIO.BCM)
 
-    GPIO.setmode(GPIO.BCM)
-    #GPIO.setmode(GPIO.BOARD)
-    # set pin as an output pin with optional initial state of HIGH
-#    GPIO.setup(output_pin, GPIO.OUT, initial=GPIO.HIGH)
-    GPIO.setup(output_pin, GPIO.OUT, initial=GPIO.HIGH)
-    GPIO.setup(output_pin1, GPIO.OUT, initial=GPIO.HIGH)		# added CWY 2020-08-07
-    curr_value = GPIO.LOW
+class VibratorThread(threading.Thread):
+    def __init__(self, pins, beeptimes, sleeptime): 
+        threading.Thread.__init__(self)
+        self.beeptimes = beeptimes
+        self.sleeptime = sleeptime
+        self.pins = pins
 
-    try:
+
+    def run(self):
+        for i in range( leng(self.pins)):
+            GPIO.setup(self.pins[i], GPIO.OUT, initial=GPIO.HIGH)
+        #GPIO.setup(self.pin1, GPIO.OUT, initial=GPIO.HIGH)		# added CWY 2020-08-07
+        curr_value = GPIO.LOW
         for x in range(beeptimes):            
-            # Toggle the output every second
-            print("GOFW {} {} {} {}".format(output_pin, curr_value, output_pin1, curr_value))
-#            print("Outputting {} to pin {}".format(curr_value, output_pin))
-#            print("Outputting {} to pin {}".format(curr_value, output_pin1))		# added CWY 2020-08-07
-            GPIO.output(output_pin, curr_value)
-            GPIO.output(output_pin1, curr_value)		# added CWY 2020-08-07
+            for i in range( leng(self.pins)):
+                print("Outputting {}:{}".format(self.pins[i], curr_value) )
+                GPIO.output(self.pins[i], curr_value)
+
             curr_value ^= GPIO.HIGH
             time.sleep(sleeptime)
-    finally:
-        GPIO.cleanup()
-        buzzer = threading.Thread(target=buzzer_thread_F, args=(2,0.02, ))
-
-def buzzer_thread_L(beeptimes, sleeptime):
-
-    GPIO.setmode(GPIO.BCM)
-    #GPIO.setmode(GPIO.BOARD)
-    # set pin as an output pin with optional initial state of HIGH
-#    GPIO.setup(output_pin, GPIO.OUT, initial=GPIO.HIGH)
-    GPIO.setup(output_pin, GPIO.OUT, initial=GPIO.HIGH)
-    GPIO.setup(output_pin1, GPIO.OUT, initial=GPIO.HIGH)		# added CWY 2020-08-07
-    curr_value = GPIO.LOW
-
-    try:
-        for x in range(beeptimes):            
-            # Toggle the output every second
-            print("LEFT {} {}".format(output_pin1, curr_value))
-#            print("Outputting {} to pin {}".format(curr_value, output_pin1))		# added CWY 2020-08-07
-            GPIO.output(output_pin1, curr_value)		# added CWY 2020-08-07
-            curr_value ^= GPIO.HIGH
-            time.sleep(sleeptime)
-    finally:
-        GPIO.cleanup()
-        buzzer = threading.Thread(target=buzzer_thread_L, args=(2,0.02, ))
-
-def buzzer_thread_R(beeptimes, sleeptime):
-
-    GPIO.setmode(GPIO.BCM)
-    #GPIO.setmode(GPIO.BOARD)
-    # set pin as an output pin with optional initial state of HIGH
-#    GPIO.setup(output_pin, GPIO.OUT, initial=GPIO.HIGH)
-    GPIO.setup(output_pin, GPIO.OUT, initial=GPIO.HIGH)
-    GPIO.setup(output_pin1, GPIO.OUT, initial=GPIO.HIGH)		# added CWY 2020-08-07
-    curr_value = GPIO.LOW
-
-    try:
-        for x in range(beeptimes):            
-            # Toggle the output every second
-            print("RGHT {} {}".format(output_pin, curr_value))
-#            print("Outputting {} to pin {}".format(curr_value, output_pin))
-            GPIO.output(output_pin, curr_value)		# added CWY 2020-08-07
-            curr_value ^= GPIO.HIGH
-            time.sleep(sleeptime)
-    finally:
-        GPIO.cleanup()
-        buzzer = threading.Thread(target=buzzer_thread_R, args=(2,0.02, ))
-
-def buzzer_thread_S(beeptimes, sleeptime):
-
-    GPIO.setmode(GPIO.BCM)
-    #GPIO.setmode(GPIO.BOARD)
-    # set pin as an output pin with optional initial state of HIGH
-#    GPIO.setup(output_pin, GPIO.OUT, initial=GPIO.HIGH)
-    GPIO.setup(output_pin, GPIO.OUT, initial=GPIO.HIGH)
-    GPIO.setup(output_pin1, GPIO.OUT, initial=GPIO.HIGH)		# added CWY 2020-08-07
-    curr_value = GPIO.LOW
-
-    try:
-        for x in range(beeptimes):            
-            # Toggle the output every second
-            print("SLFW {} {} {} {}".format(output_pin, curr_value, output_pin1, curr_value^GPIO.HIGH))
-#            print("Outputting {} to pin {}".format(curr_value, output_pin))
-#            print("Outputting {} to pin {}".format(curr_value ^ GPIO.HIGH, output_pin1))
-            GPIO.output(output_pin, curr_value)		# added CWY 2020-08-07
-            GPIO.output(output_pin1, curr_value ^ GPIO.HIGH)		# added CWY 2020-08-07
-            curr_value ^= GPIO.HIGH
-            time.sleep(sleeptime)
-    finally:
-        GPIO.cleanup()
-        buzzer = threading.Thread(target=buzzer_thread_S, args=(2,0.02, ))
-
-def buzzer_thread_T(beeptimes, sleeptime):
-
-    GPIO.setmode(GPIO.BCM)
-    #GPIO.setmode(GPIO.BOARD)
-    # set pin as an output pin with optional initial state of HIGH
-#    GPIO.setup(output_pin, GPIO.OUT, initial=GPIO.HIGH)
-    GPIO.setup(output_pin, GPIO.OUT, initial=GPIO.HIGH)
-    GPIO.setup(output_pin1, GPIO.OUT, initial=GPIO.HIGH)		# added CWY 2020-08-07
-    curr_value = GPIO.LOW
-
-    try:
-        for x in range(beeptimes):            
-            # Toggle the output every second
-            print("STOP {} {} {} {}".format(output_pin, curr_value, output_pin1, curr_value^GPIO.HIGH))
-#            print("Outputting {} to pin {}".format(curr_value, output_pin))
-#            print("Outputting {} to pin {}".format(curr_value ^ GPIO.HIGH, output_pin1))
-            GPIO.output(output_pin, curr_value)		# added CWY 2020-08-07
-            GPIO.output(output_pin1, curr_value ^ GPIO.HIGH)		# added CWY 2020-08-07
-            curr_value ^= GPIO.HIGH
-            time.sleep(sleeptime)
-    finally:
-        GPIO.cleanup()
-        buzzer = threading.Thread(target=buzzer_thread_T, args=(2,0.02, ))
 
 
 class NonStopBuzzerThread(threading.Thread):
@@ -241,11 +148,23 @@ class NonStopBuzzerThread(threading.Thread):
             curr_value ^= GPIO.HIGH                     
             time.sleep(0.5) 
 
+buzzer_f = VibratorThread( [17], 3, 0.5)
+buzzer_l = VibratorThread( [18], 3, 0.5)
+buzzer_r = VibratorThread( [27], 3, 0.5)
+buzzer_s = VibratorThread( [24], 3, 0.5)
+buzzer_t = VibratorThread( [17,18,27,24], 3, 0.5)
 
+'''
 non_stop_buzzer = NonStopBuzzerThread()
+'''
 
-buzzer = threading.Thread(target=buzzer_thread_F, args=(2,0.04, ))
-
+'''
+buzzer_f = threading.Thread(target=buzzer_thread_F, args=(2,0.3, ))
+buzzer_l = threading.Thread(target=buzzer_thread_L, args=(2,0.3, ))
+buzzer_r = threading.Thread(target=buzzer_thread_R, args=(2,0.3, ))
+buzzer_s = threading.Thread(target=buzzer_thread_S, args=(2,0.1, ))
+buzzer_t = threading.Thread(target=buzzer_thread_T, args=(4,0.2, ))
+'''
 
 ###these lines are for GPIO outputs ends
 
@@ -305,24 +224,26 @@ def myCustomActions(detections, img):
 #            #oled(detection[0].decode())
 
 
-
-        if detection[0].decode() == "tvmonitor" :
-            buzzer_thread_F(2, 0.3)
-
         if detection[0].decode() == "GOFORWARD" :
-            buzzer_thread_F(2, 0.3)
+            if not buzzer_f.isAlive():
+                buzzer_f.start()
 
         if detection[0].decode() == "GOLEFT" :
-            buzzer_thread_L(2, 0.3)
+            if not buzzer_l.isAlive():
+                buzzer_l.start()
 
         if detection[0].decode() == "GORIGHT" :
-            buzzer_thread_R(2, 0.3)
+            if not buzzer_r.isAlive():
+                buzzer_r.start()
 
         if detection[0].decode() == "SLOWFORWARD" :
-            buzzer_thread_S(2, 0.1)
+            if not buzzer_s.isAlive():
+                buzzer_s.start()            
 
         if detection[0].decode() == "STOP" :
-            buzzer_thread_T(4, 0.2)
+            if not buzzer_t.isAlive():
+                buzzer_t.start()      
+
 
 """
     #If detected something
@@ -574,6 +495,7 @@ def main():
 
         
     cap.release()
+    GPIO.cleanup()
 
 
     if ( not args.save_video == "" ):

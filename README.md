@@ -85,6 +85,7 @@ vim Makefile
 GPU=1
 CUDNN=1
 OPENCV=1
+LIBSO=1
 ```
 ```diff
 #uncomment the line
@@ -233,3 +234,16 @@ https://colab.research.google.com/drive/1lfcAim-fHge2L9fdD49eu8LNUaAMgk4G
 
 # Connections
 [How to connect](CONNECTION-README.md)
+
+# If you find that the image captured is red. You can try to download .isp file and installed:
+https://www.waveshare.com/wiki/IMX219-160_Camera
+
+```bash
+wget https://www.waveshare.com/w/upload/e/eb/Camera_overrides.tar.gz
+tar zxvf Camera_overrides.tar.gz 
+sudo cp camera_overrides.isp /var/nvidia/nvcam/settings/
+sudo chmod 664 /var/nvidia/nvcam/settings/camera_overrides.isp
+sudo chown root:root /var/nvidia/nvcam/settings/camera_overrides.isp
+rm Camera_overrides.tar.gz 
+rm camera_overrides.isp
+```
