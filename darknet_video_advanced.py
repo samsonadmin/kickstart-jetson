@@ -259,6 +259,10 @@ def main():
     configPath = "../darknet/cfg/yolov4-tiny.cfg"
     weightPath = "../darknet/yolov4-tiny.weights"
     metaPath = "../darknet/coco.data"
+
+    configPath = "../trained-weights/reference/yolov4-tiny.cfg"
+    weightPath = "../trained-weights/reference/yolov4-tiny.weights"
+    metaPath = "../trained-weights/reference/coco.data"
     
     thresh = 0.3
     if not os.path.exists(configPath):

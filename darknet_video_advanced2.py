@@ -500,15 +500,18 @@ def main():
                     pass        
             break            
             
-        break      
+                 
         '''
 
         prev_time = time.time()
         ret, frame_read = cap.read()
 
+        '''
         if ret != True:
             break
-                    
+        '''
+
+        #cv2.imshow(WINDOW_NAME, frame_read)                 
         frame_rgb = cv2.cvtColor(frame_read, cv2.COLOR_BGR2RGB)
 
         if ( args.show_video == True ):
