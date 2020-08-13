@@ -375,6 +375,8 @@ def main():
         ret, frame_read = cap.read()
 
         if ret != True:
+            print("Video open failed, run:")
+            print("sudo systemctl restart nvargus-daemon")            
             break
                     
         frame_rgb = cv2.cvtColor(frame_read, cv2.COLOR_BGR2RGB)

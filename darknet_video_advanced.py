@@ -14,6 +14,7 @@ import argparse
 import serial
 import threading
 #for luma led display55
+"""
 from luma.led_matrix.device import max7219
 from luma.core.interface.serial import i2c, spi, noop
 from luma.core.render import canvas
@@ -22,6 +23,7 @@ from luma.core.legacy.font import proportional, LCD_FONT
 from luma.core import legacy
 from luma.oled.device import ssd1306
 from PIL import Image, ImageDraw, ImageFont
+"""
 
 #for buzzer
 import Jetson.GPIO as GPIO
@@ -61,6 +63,7 @@ def oled(display_text):
         with canvas(oled_device) as draw:
             draw.text( (0, 0), display_text, fill="white", font=oled_font)        
 
+"""
 try:
     #https://ssd1306.readthedocs.io/en/latest/python-usage.html
     serial_i2c = i2c(port=1, address=0x3c)
@@ -82,16 +85,7 @@ try:
 except:
     led_matrix_ok = False
 
-
-
-# Pin Definitions
-output_pin0 = 18  # BOARD pin 12, BCM pin 18
-output_pin1 = 17  # BOARD pin 11, BCM pin 17		# added CWY 2020-08-07
-
-last_serial_command_sent = ""
-next_serial_command_to_send = ""
-fall_detected_outer_rectangle_is_on = False
-halt_non_stop_buzzer_thread = False
+"""
 
 GPIO.setmode(GPIO.BCM)
 
@@ -101,20 +95,36 @@ class VibratorThread(threading.Thread):
         self.beeptimes = beeptimes
         self.sleeptime = sleeptime
         self.pins = pins
-
-
+        self.run_again = False
+        for i in range( len(self.pins)):
+            GPIO.setup(self.pins[i], GPIO.OUT, initial=GPIO.HIGH)        
+            #print("Outputting {}:{}".format(self.pins[i], curr_value) )
+            GPIO.output(self.pins[i], False)
+        
     def run(self):
-        for i in range( leng(self.pins)):
-            GPIO.setup(self.pins[i], GPIO.OUT, initial=GPIO.HIGH)
-        #GPIO.setup(self.pin1, GPIO.OUT, initial=GPIO.HIGH)		# added CWY 2020-08-07
-        curr_value = GPIO.LOW
-        for x in range(beeptimes):            
-            for i in range( leng(self.pins)):
-                print("Outputting {}:{}".format(self.pins[i], curr_value) )
-                GPIO.output(self.pins[i], curr_value)
+        #print("starting vibrator thread")
+        while True:
+            if self.run_again:      
+                print("restarting vibrator thread")
+                #GPIO.setup(self.pin1, GPIO.OUT, initial=GPIO.HIGH)		# added CWY 2020-08-07
+                curr_value = True
+                for x in range(self.beeptimes):            
+                    for i in range( len(self.pins)):
+                        print("Outputting {}:{}".format(self.pins[i], curr_value) )
+                        GPIO.output(self.pins[i], curr_value)
 
-            curr_value ^= GPIO.HIGH
-            time.sleep(sleeptime)
+                    if curr_value:
+                        curr_value = False
+                    else:
+                        curr_value = True
+
+                    time.sleep(self.sleeptime)
+                self.run_again = False
+            else:
+                time.sleep(0.5)
+
+
+
 
 
 class NonStopBuzzerThread(threading.Thread):
@@ -148,23 +158,13 @@ class NonStopBuzzerThread(threading.Thread):
             curr_value ^= GPIO.HIGH                     
             time.sleep(0.5) 
 
-buzzer_f = VibratorThread( [17], 3, 0.5)
-buzzer_l = VibratorThread( [18], 3, 0.5)
-buzzer_r = VibratorThread( [27], 3, 0.5)
-buzzer_s = VibratorThread( [24], 3, 0.5)
-buzzer_t = VibratorThread( [17,18,27,24], 3, 0.5)
 
-'''
+
+
+"""
 non_stop_buzzer = NonStopBuzzerThread()
-'''
+"""
 
-'''
-buzzer_f = threading.Thread(target=buzzer_thread_F, args=(2,0.3, ))
-buzzer_l = threading.Thread(target=buzzer_thread_L, args=(2,0.3, ))
-buzzer_r = threading.Thread(target=buzzer_thread_R, args=(2,0.3, ))
-buzzer_s = threading.Thread(target=buzzer_thread_S, args=(2,0.1, ))
-buzzer_t = threading.Thread(target=buzzer_thread_T, args=(4,0.2, ))
-'''
 
 ###these lines are for GPIO outputs ends
 
@@ -206,44 +206,31 @@ def cvDrawBoxes(detections, img):
     return img
 
 
+tester = 1
 
 def myCustomActions(detections, img):
-    global led_matrix, non_stop_buzzer
-
+    global led_matrix, buzzer_f, buzzer_l, buzzer_r, buzzer_s, buzzer_t
+    global tester
 
     for detection in detections:
         print ( detection[0].decode() + " : " + str(round(detection[1] * 100, 2)) + "%" )
-#        if detection[0].decode() == "person" :
-#            led_matrix("a")
-#            #oled works, but causes slowdown
-#            oled(detection[0].decode())
-#
-#        if detection[0].decode() == "car" :
-#            led_matrix("d")
-#            #oled works, but causes slowdown
-#            #oled(detection[0].decode())
 
 
         if detection[0].decode() == "GOFORWARD" :
-            if not buzzer_f.isAlive():
-                buzzer_f.start()
+            buzzer_f.run_again = True
 
         if detection[0].decode() == "GOLEFT" :
-            if not buzzer_l.isAlive():
-                buzzer_l.start()
+            buzzer_l.run_again = True
 
         if detection[0].decode() == "GORIGHT" :
-            if not buzzer_r.isAlive():
-                buzzer_r.start()
+            buzzer_r.run_again = True
 
         if detection[0].decode() == "SLOWFORWARD" :
-            if not buzzer_s.isAlive():
-                buzzer_s.start()            
+            buzzer_s.run_again = True  
 
         if detection[0].decode() == "STOP" :
-            if not buzzer_t.isAlive():
-                buzzer_t.start()      
-
+            buzzer_f.run_again = True 
+     
 
 """
     #If detected something
@@ -290,8 +277,8 @@ altNames = None
 fps_time = 0
 
 WINDOW_NAME = 'Darknet Yolo'
-video_width = 1920
-video_height = 1080
+video_width = 416
+video_height = 416
 
 def main():
 
@@ -305,15 +292,16 @@ def main():
     args = parser.parse_args()
 
  
+    global led_matrix, buzzer_f, buzzer_l, buzzer_r, buzzer_s, buzzer_t
     global metaMain, netMain, altNames
     global fps_time
 
-    configPath = "../trained-weights/reference/yolov4-tiny.cfg"
-    weightPath = "../trained-weights/reference/yolov4-tiny.weights"
-    metaPath = "../trained-weights/reference/coco.data"
-    #configPath = "../track/yolov4-tiny.cfg"
-    #weightPath = "../track/yolov4-tiny_final.weights"
-    #metaPath = "../track/obj-google.data"
+    #configPath = "../trained-weights/reference/yolov4-tiny.cfg"
+    #weightPath = "../trained-weights/reference/yolov4-tiny.weights"
+    #metaPath = "../trained-weights/reference/coco.data"
+    configPath = "../track/yolov4-tiny.cfg"
+    weightPath = "../track/yolov4-tiny_final.weights"
+    metaPath = "../track/obj-google.data"
     
     thresh = 0.3
     if not os.path.exists(configPath):
@@ -372,8 +360,8 @@ def main():
         cv2.namedWindow(WINDOW_NAME, cv2.WND_PROP_FULLSCREEN) 
         cv2.resizeWindow(WINDOW_NAME, 640, 360)
 
-    #cap.set(3, 1920)
-    #cap.set(4, 1080)
+    #cap.set(3, video_width)
+    #cap.set(4, video_height)
     
 
     ##This will write the code
@@ -382,7 +370,7 @@ def main():
         
 
         if ( args.show_video == True ):
-            out_video = cv2.VideoWriter( args.save_video , fourcc, 30, (1920, 1080))
+            out_video = cv2.VideoWriter( args.save_video , fourcc, 30, (video_width, video_height))
         else:
             out_video = cv2.VideoWriter( args.save_video , fourcc, 30, (darknet.network_width(netMain), darknet.network_height(netMain)))
 
@@ -394,6 +382,20 @@ def main():
 
     print("Starting the YOLO loop...")
 
+    
+    buzzer_f = VibratorThread( [27], 2, 0.5)
+    buzzer_l = VibratorThread( [17], 2, 0.3)
+    buzzer_r = VibratorThread( [18], 2, 0.3)
+    buzzer_s = VibratorThread( [27], 2, 1)
+    buzzer_t = VibratorThread( [17,18], 2, 2)    
+    
+    buzzer_f.start()
+    buzzer_l.start()
+    buzzer_r.start()
+    buzzer_s.start()
+    buzzer_t.start()
+
+
     # Create an image we reuse for each detect
 
     if ( args.show_video == True ):
@@ -402,11 +404,11 @@ def main():
         darknet_image = darknet.make_image(darknet.network_width(netMain),
                                         darknet.network_height(netMain),3)
 
-    
+    #faulthandler.enable()
                                     
     while True:
 
-        '''
+        
         if cv2.getWindowProperty(WINDOW_NAME, 0) < 0:
             # Check to see if the user has closed the window
             # If yes, terminate the program
@@ -422,17 +424,19 @@ def main():
             break            
             
                  
-        '''
+        
 
         prev_time = time.time()
         ret, frame_read = cap.read()
 
-        '''
+        
         if ret != True:
+            print("Video open failed, run:")
+            print("sudo systemctl restart nvargus-daemon")
             break
-        '''
+        
 
-        #cv2.imshow(WINDOW_NAME, frame_read)                 
+        cv2.imshow(WINDOW_NAME, frame_read)                 
         frame_rgb = cv2.cvtColor(frame_read, cv2.COLOR_BGR2RGB)
 
         if ( args.show_video == True ):
@@ -447,19 +451,21 @@ def main():
             darknet.copy_image_from_bytes(darknet_image,frame_resized.tobytes())
         
         #Printing the detections
-        detections = darknet.detect_image(netMain, metaMain, darknet_image, thresh=thresh)
+        detections = darknet.detect_image(netMain, metaMain, darknet_image, thresh=thresh, debug=False)
 
         #print(detections)
 
         ### Edited the code to perform what what ever you need to
               
 
-        if ( args.show_video == True ): 
+        if ( args.show_video == True ):             
             image = cvDrawBoxes(detections, frame_rgb)
         else:
+            
             image = cvDrawBoxes(detections, frame_resized)
         
-        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)                 
+        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)        
+
         myCustomActions(detections,image)
 
         cv2.putText(image,
@@ -483,7 +489,7 @@ def main():
         key = cv2.waitKey(1)
         if key == 27 or key == ord("q"): # ESC 
             #stop the buzzer
-            '''
+            """
             if non_stop_buzzer.isAlive():
                 try:
                     non_stop_buzzer.stopit()
@@ -491,7 +497,7 @@ def main():
                 except:
                     pass        
             break
-            '''
+            """
 
         
     cap.release()
