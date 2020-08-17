@@ -90,8 +90,9 @@ except:
 GPIO.setmode(GPIO.BCM)
 
 class VibratorThread(threading.Thread):
-    def __init__(self, pins, beeptimes, sleeptime): 
-        threading.Thread.__init__(self)
+    def __init__(self, pins, beeptimes, sleeptime, *args, **kwargs): 
+        super(VibratorThread, self).__init__(*args, **kwargs) 
+        self._stopper = threading.Event() 
         self.beeptimes = beeptimes
         self.sleeptime = sleeptime
         self.pins = pins
@@ -100,10 +101,23 @@ class VibratorThread(threading.Thread):
             GPIO.setup(self.pins[i], GPIO.OUT, initial=GPIO.HIGH)        
             #print("Outputting {}:{}".format(self.pins[i], curr_value) )
             GPIO.output(self.pins[i], False)
-        
+
+     #  (avoid confusion)
+    def stopit(self):       
+        self._stopper.set() # ! must not use _stop
+        GPIO.output(output_pin, GPIO.LOW)       
+  
+    def stopped(self): 
+        return self._stopper.isSet() 
+
+
     def run(self):
         #print("starting vibrator thread")
         while True:
+
+            if self.stopped(): 
+                return
+
             if self.run_again:      
                 print("restarting vibrator thread")
                 #GPIO.setup(self.pin1, GPIO.OUT, initial=GPIO.HIGH)		# added CWY 2020-08-07
@@ -277,8 +291,35 @@ altNames = None
 fps_time = 0
 
 WINDOW_NAME = 'Darknet Yolo'
-video_width = 416
-video_height = 416
+video_width = 1920
+video_height = 1080
+
+
+#this is need to stop the running threads, otherwise buzzer continues to make sounds
+import signal, sys
+def graceful_exit(sig, frame):
+    print('You pressed Ctrl+C/Z!')
+
+    try:
+        buzzer_f.stopit()
+        buzzer_f.join()
+        buzzer_l.stopit()
+        buzzer_l.join()
+        buzzer_r.stopit()
+        buzzer_r.join()
+        buzzer_s.stopit()
+        buzzer_s.join()
+        buzzer_t.stopit()
+        buzzer_t.join()
+    except:
+        pass        
+
+    sys.exit(0)
+
+signal.signal(signal.SIGINT, graceful_exit)
+signal.signal(signal.SIGTSTP, graceful_exit)
+#################
+
 
 def main():
 
@@ -296,12 +337,12 @@ def main():
     global metaMain, netMain, altNames
     global fps_time
 
-    #configPath = "../trained-weights/reference/yolov4-tiny.cfg"
-    #weightPath = "../trained-weights/reference/yolov4-tiny.weights"
-    #metaPath = "../trained-weights/reference/coco.data"
-    configPath = "../track/yolov4-tiny.cfg"
-    weightPath = "../track/yolov4-tiny_final.weights"
-    metaPath = "../track/obj-google.data"
+    configPath = "../trained-weights/reference/yolov4-tiny.cfg"
+    weightPath = "../trained-weights/reference/yolov4-tiny.weights"
+    metaPath = "../trained-weights/reference/coco.data"
+    #configPath = "../track/yolov4-tiny.cfg"
+    #weightPath = "../track/yolov4-tiny_final.weights"
+    #metaPath = "../track/obj-google.data"
     
     thresh = 0.3
     if not os.path.exists(configPath):
@@ -396,6 +437,7 @@ def main():
     buzzer_t.start()
 
 
+
     # Create an image we reuse for each detect
 
     if ( args.show_video == True ):
@@ -488,6 +530,21 @@ def main():
 
         key = cv2.waitKey(1)
         if key == 27 or key == ord("q"): # ESC 
+
+            try:
+                buzzer_f.stopit()
+                buzzer_f.join()
+                buzzer_l.stopit()
+                buzzer_l.join()
+                buzzer_r.stopit()
+                buzzer_r.join()
+                buzzer_s.stopit()
+                buzzer_s.join()
+                buzzer_t.stopit()
+                buzzer_t.join()
+            except:
+                pass
+
             #stop the buzzer
             """
             if non_stop_buzzer.isAlive():
