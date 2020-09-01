@@ -90,7 +90,7 @@ except:
 GPIO.setmode(GPIO.BCM)
 
 class VibratorThread(threading.Thread):
-    def __init__(self, pins, beeptimes, sleeptime): 
+    def __init__(self, pins, beeptimes, sleeptime, *args, **kwargs): 
         super(VibratorThread, self).__init__(*args, **kwargs) 
         self._stopper = threading.Event() 
         self.beeptimes = beeptimes
@@ -293,6 +293,36 @@ fps_time = 0
 WINDOW_NAME = 'Darknet Yolo'
 video_width = 1920
 video_height = 1080
+<<<<<<< HEAD
+=======
+
+
+#this is need to stop the running threads, otherwise buzzer continues to make sounds
+import signal, sys
+def graceful_exit(sig, frame):
+    print('You pressed Ctrl+C/Z!')
+
+    try:
+        buzzer_f.stopit()
+        buzzer_f.join()
+        buzzer_l.stopit()
+        buzzer_l.join()
+        buzzer_r.stopit()
+        buzzer_r.join()
+        buzzer_s.stopit()
+        buzzer_s.join()
+        buzzer_t.stopit()
+        buzzer_t.join()
+    except:
+        pass        
+
+    sys.exit(0)
+
+signal.signal(signal.SIGINT, graceful_exit)
+signal.signal(signal.SIGTSTP, graceful_exit)
+#################
+
+>>>>>>> f151a3b339183482a2ae53c5d04df0e0ea2bcdac
 
 def main():
 
@@ -410,6 +440,7 @@ def main():
     buzzer_t.start()
 
 
+
     # Create an image we reuse for each detect
 
     if ( args.show_video == True ):
@@ -502,6 +533,21 @@ def main():
 
         key = cv2.waitKey(1)
         if key == 27 or key == ord("q"): # ESC 
+
+            try:
+                buzzer_f.stopit()
+                buzzer_f.join()
+                buzzer_l.stopit()
+                buzzer_l.join()
+                buzzer_r.stopit()
+                buzzer_r.join()
+                buzzer_s.stopit()
+                buzzer_s.join()
+                buzzer_t.stopit()
+                buzzer_t.join()
+            except:
+                pass
+
             #stop the buzzer
             """
             if non_stop_buzzer.isAlive():
