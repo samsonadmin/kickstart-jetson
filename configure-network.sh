@@ -77,3 +77,8 @@ sleep 2
 ##Extra
 #GUI tool, accessible from remote X11
 #nm-connection-editor
+
+
+
+#sudo nmcli device wifi list
+#sudo nmcli device wifi connect spotlckw-internal password 26062233
