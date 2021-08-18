@@ -63,21 +63,14 @@ Host Jetsonnano-192.168.2.1
 ![Visual Studio Code](https://www.mail2you.net/stem/vcs07.jpg)
 
 
-## Step 6. SSH (with Xshell into jetson)
-![Visual Studio Code](https://www.mail2you.net/stem/xshell01.jpg)
-
-![Visual Studio Code](https://www.mail2you.net/stem/xshell02.jpg)
-
-![Visual Studio Code](https://www.mail2you.net/stem/xshell03.jpg)
-
-## Step 7. Download Yolo
+## Step 6. Download Yolo
 
 ```bash
 cd
 git clone https://github.com/AlexeyAB/darknet.git
 ```
 
-## Step 8. Edit Makefile
+## Step 7. Edit Makefile
 ```bash
 vim Makefile
 ```
@@ -102,12 +95,12 @@ export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:/usr/local/cuda/lib64
 source ~/.bashrc
 ```
 
-## Step 9. Compile the program
+## Step 8. Compile the program
 ```bash
 make -j4
 ```
 
-## Step 10. Download models & weights 
+## Step 9. Download models & weights 
 ```bash
 #model
 wget https://raw.githubusercontent.com/AlexeyAB/darknet/master/cfg/enet-coco.cfg
@@ -124,21 +117,21 @@ wget https://www.mail2you.net/weights/mask2020/obj.edge.data
 wget https://www.mail2you.net/weights/mask2020/classes.txt
 ```
 
-## Step 11. Your first inference!
+## Step 10. Your first inference!
 ```bash
 ./darknet detector test cfg/coco.data yolov3-tiny-prn.cfg yolov3-tiny-prn.weights data/person.jpg
 ```
 
-## Step 12. Lets test on video
+## Step 11. Lets test on video
 ```bash
 ./darknet detector test cfg/coco.data yolov3-tiny-prn.cfg yolov3-tiny-prn.weights data/person.jpg
 ```
 
-## Step 13. Take Pictures and build your own training
+## Step 12. Take Pictures and build your own training
 > Let's take some time and allow me to explain what are the important things you need to consider when doing your training
 > 
 
-## Step 14. Train your weight
+## Step 13. Train your weight
 > However, training is almost impossible to be done on jetson nano, lets do it on cloud, we will use [Google Colab](https://colab.research.google.com/drive/1lfcAim-fHge2L9fdD49eu8LNUaAMgk4G?usp=sharing)
 ```bash
  ./darknet detector train "/training-data/face_mask/obj-google.data"  "/training-data/face_mask/yolov3-tiny-prn-832.cfg"  "/training-data/face_mask/yolov3-tiny-prn-832_last.weights" -dont_show
