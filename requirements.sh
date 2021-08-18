@@ -102,7 +102,6 @@ sudo -H pip install -U jetson-stats
 
 #sudo systemctl set-default multi-user.target
 
-sudo apt-get install -y ipython ipython-notebook 
 
 
 sudo -H pip3 install -U pip testresources setuptools
@@ -117,11 +116,3 @@ sudo apt-get install nvidia-jetpack -y
 
 #https://developer.ridgerun.com/wiki/index.php?title=Pose_Estimation_using_TensorRT_on_NVIDIA_Jetson
 
-## For GPIO
-sudo -H pip3 install Jetson.GPIO luma.led_matrix
-
-## For SPI, https://github.com/gtjoseph/jetson-nano-support/tree/master
-wget https://github.com/gtjoseph/jetson-nano-support/releases/download/v1.0.2/flash-dtb-update-2019-12-09.tar.gz
-tar -zxvf flash-dtb-update-2019-12-09.tar.gz
-cd flash-dtb-update-2019-12-09
-sudo ./flashme.sh /dev/mmcblk0
