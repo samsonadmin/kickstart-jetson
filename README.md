@@ -15,7 +15,7 @@ and burn ISO using [balenaEtcher](https://www.balena.io/etcher/)
 ## Step 2. Clone my opensource repo
 > This automatically do some magic stuffs
 ```bash
-git clone https://github.com/samsonadmin/kickstart-jetson.git
+git clone https://github.com/carryai/kickstart-jetson.git
 cd kickstart-jetson
 ```
 
