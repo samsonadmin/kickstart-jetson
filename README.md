@@ -132,7 +132,7 @@ wget https://www.mail2you.net/weights/mask2020/classes.txt
 > 
 
 ## Step 13. Train your weight
-> However, training is almost impossible to be done on jetson nano, lets do it on cloud, we will use [Google Colab](https://colab.research.google.com/drive/1lfcAim-fHge2L9fdD49eu8LNUaAMgk4G?usp=sharing)
+> However, training is almost impossible to be done on jetson nano, lets do it on cloud, we will use [Google Colab](https://colab.research.google.com/drive/1czTxmIIcMkqRdgbsTOOmO4ecBeFIrKP8)
 ```bash
  ./darknet detector train "/training-data/face_mask/obj-google.data"  "/training-data/face_mask/yolov3-tiny-prn-832.cfg"  "/training-data/face_mask/yolov3-tiny-prn-832_last.weights" -dont_show
  ```
