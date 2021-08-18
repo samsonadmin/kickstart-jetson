@@ -146,51 +146,13 @@ wget https://www.mail2you.net/weights/mask2020/classes.txt
 See [https://www.jetsonhacks.com/2019/06/07/jetson-nano-gpio/](https://www.jetsonhacks.com/2019/06/07/jetson-nano-gpio/)
 See [https://github.com/NVIDIA/jetson-gpio](https://github.com/NVIDIA/jetson-gpio)
 
-
+##　Running Jetson-IO
+After the setup, we’re ready to go:
 ```bash
-sudo -H pip3 install Jetson.GPIO luma.led_matrix
-
-sudo groupadd -f -r gpio
-sudo usermod -a -G gpio your_user_name
-sudo usermod -a -G gpio jetsonnano
-
-sudo cp /lib/udev/rules.d/60-jetson-gpio-common.rules  /etc/udev/rules.d/
-sudo reboot
-```
-
-https://forums.developer.nvidia.com/t/read-write-permission-ttyths1/81623
-
-created a udev rule: /etc/udev/rules.d/55-tegraserial.rules
-KERNEL=="ttyTHS*", MODE="0666"
-```bash
-sudo /etc/rc.local
-chmod 666 /dev/ttyTHS1
-```
-
-
-## Enable SPI on jetson nano
-
-https://github.com/gtjoseph/jetson-nano-support/tree/l4t_32.2.1
-
-
-## For SPI, https://github.com/gtjoseph/jetson-nano-support/tree/master
-
-```bash
-wget https://github.com/gtjoseph/jetson-nano-support/releases/download/v1.0.2/flash-dtb-update-2019-12-09.tar.gz
-tar -zxvf flash-dtb-update-2019-12-09.tar.gz
-```
-
-
-## Using the max7219 matrix LED
-```bash
-pip install luma.led_matrix
-```
-
-### hardware:
-https://raspi.tv/2013/8-x-8-led-array-driven-by-max7219-on-the-raspberry-pi-via-python
-
-### Software:
-https://github.com/rm-hull/luma.led_matrix
+sudo /opt/nvidia/jetson-io/jetson-io.py
+ ```
+ ![Visual Studio Code](https://i0.wp.com/www.jetsonhacks.com/wp-content/uploads/2020/05/JetsonIO-Main.png?w=635&ssl=1)
+ 
 
 
 ## Manage Autostart
