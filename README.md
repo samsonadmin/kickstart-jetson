@@ -230,7 +230,9 @@ https://www.prusaprinters.org/prints/1420-nvidia-jetson-nano-case-nanomesh-mini
 ```
 
 # Save as a copy in Drive
-https://colab.research.google.com/drive/1lfcAim-fHge2L9fdD49eu8LNUaAMgk4G
+https://colab.research.google.com/drive/1czTxmIIcMkqRdgbsTOOmO4ecBeFIrKP8
+
+
 
 # Connections
 [How to connect](CONNECTION-README.md)
