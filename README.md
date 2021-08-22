@@ -72,21 +72,25 @@ git clone https://github.com/AlexeyAB/darknet.git
 
 ## Step 7. Edit Makefile
 ```bash
-vim Makefile
+nano Makefile
 ```
+
+
 ```diff
 GPU=1
 CUDNN=1
 OPENCV=1
 LIBSO=1
 ```
+
 ```diff
 #uncomment the line
 ARCH= -gencode arch=compute_53,code=[sm_53,compute_53]
 ```
 
 ```bash
-vim /root/.bashrc
+nano ~/.bashrc
+
 
 export CUDA_VER=10.0
 export PATH=${PATH}:/usr/local/cuda/bin
