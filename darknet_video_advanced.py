@@ -11,10 +11,11 @@ import argparse
 
 ###these lines are for GPIO outputs
 
-import serial
+
 import threading
 #for luma led display55
 """
+import serial
 from luma.led_matrix.device import max7219
 from luma.core.interface.serial import i2c, spi, noop
 from luma.core.render import canvas
@@ -346,9 +347,9 @@ def main():
     global metaMain, netMain, altNames
     global fps_time
 
-    configPath = "../trained-weights/reference/yolov4-tiny.cfg"
-    weightPath = "../trained-weights/reference/yolov4-tiny.weights"
-    metaPath = "../trained-weights/reference/coco.data"
+    configPath = "../darknet/cfg/yolov4-csp.cfg"
+    weightPath = "../darknet/yolov4-csp.weights"
+    metaPath = "coco.data"
     #configPath = "../track/yolov4-tiny.cfg"
     #weightPath = "../track/yolov4-tiny_final.weights"
     #metaPath = "../track/obj-google.data"

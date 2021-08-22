@@ -113,6 +113,12 @@ sudo apt-get dist-upgrade -y
 
 sudo apt-get install nvidia-jetpack -y
 
+sudo pip3 install Jetson.GPIO
+
+sudo groupadd -f -r gpio
+sudo usermod -a -G gpio $USER
+
+pip3 install numpy==1.19.4
 
 #https://developer.ridgerun.com/wiki/index.php?title=Pose_Estimation_using_TensorRT_on_NVIDIA_Jetson
 
