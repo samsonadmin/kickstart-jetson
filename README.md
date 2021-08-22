@@ -113,30 +113,25 @@ make -j4
 ```
 
 ## Step 9. Download models & weights 
-```bash
-#model
-wget https://raw.githubusercontent.com/AlexeyAB/darknet/master/cfg/enet-coco.cfg
-#weights
-wget https://www.mail2you.net/weights/enetb0-coco_final.weights
+cd ~/darknet
+wget https://github.com/AlexeyAB/darknet/releases/download/darknet_yolo_v4_pre/yolov4-tiny.weights -O yolov4-tiny.weights
 
-#class names
-wget https://www.mail2you.net/weights/coco.data
-wget https://www.mail2you.net/weights/classes.txt
-
-cd mask
-#class names
-wget https://www.mail2you.net/weights/mask2020/obj.edge.data
-wget https://www.mail2you.net/weights/mask2020/classes.txt
-```
+wget https://github.com/AlexeyAB/darknet/releases/download/darknet_yolo_v4_pre/yolov4-csp.weights -O yolov4-csp.weights
 
 ## Step 10. Your first inference!
 ```bash
-./darknet detector test cfg/coco.data yolov3-tiny-prn.cfg yolov3-tiny-prn.weights data/person.jpg
+./darknet detector test ~/darknet/cfg/coco.data ~/darknet/cfg/yolov4-csp.cfg ~/darknet/yolov4-csp.weights data/person.jpg
 ```
 
-## Step 11. Lets test on video
+## Step 11. Lets test with USB Camera
 ```bash
-./darknet detector test cfg/coco.data yolov3-tiny-prn.cfg yolov3-tiny-prn.weights data/person.jpg
+cd ~/darknet
+export DISPLAY=:1
+
+./darknet detector demo  ~/darknet/cfg/coco.data  ~/darknet/cfg/yolov4-csp.cfg   ~/darknet/yolov4-csp.weights    -thresh 0.50 -ext_output \
+'v4l2src io-mode=2 device=/dev/video0 ! image/jpeg, width=1920, height=1080, framerate=30/1 ! jpegdec ! video/x-raw !  nvvidconv ! video/x-raw(memory:NVMM), format=(string)I420 ! nvvidconv ! video/x-raw, format=(string)BGRx ! videoconvert ! video/x-raw, format=BGR ! appsink max-buffers=1 drop=true sync=false'  
+
+
 ```
 
 ## Step 12. Take Pictures and build your own training
