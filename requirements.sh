@@ -6,7 +6,7 @@ sudo apt-get purge apport -y
 
 sudo apt-get clean 
 sudo apt-get autoremove -y
-sudo apt-get install -y v4l-utils
+sudo apt-get install -y v4l-utils nano
 
 
 sudo apt-get update
