@@ -608,6 +608,14 @@ show_menu_yolov3_detection_options()
 		wget https://github.com/AlexeyAB/darknet/releases/download/darknet_yolo_v4_pre/yolov4-tiny.weights -O yolov4-tiny.weights
 	fi
 
+	if [[ -f "yolov4-csp.weights" ]]; then
+		echo "YoloV4-csp weights exists."
+	else
+		cd ~/darknet
+		wget https://github.com/AlexeyAB/darknet/releases/download/darknet_yolo_v4_pre/yolov4-csp.weights -O yolov4-csp.weights
+	fi
+
+
 	back_title="Chosen Camera: ${VIDEO_CAMERA_INPUTS[$camera_num,1]} ${VIDEO_CAMERA_INPUTS[$camera_num,0]} ${VIDEO_CAMERA_INPUTS[$camera_num,5]}x${VIDEO_CAMERA_INPUTS[$camera_num,6]}@${VIDEO_CAMERA_INPUTS[$camera_num,7]}fps"
 
 	unset dialog_menu
