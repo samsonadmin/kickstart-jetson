@@ -76,6 +76,7 @@ nano Makefile
 ```
 
 
+## Change the following contents of the Makefile
 ```diff
 GPU=1
 CUDNN=1
@@ -83,19 +84,26 @@ OPENCV=1
 LIBSO=1
 ```
 
+## Change the following contents of the Makefile, uncomment the lines
 ```diff
 #uncomment the line
 ARCH= -gencode arch=compute_53,code=[sm_53,compute_53]
 ```
 
+## Change the the environment file, ~/.bashrc
 ```bash
 nano ~/.bashrc
+```
 
-
+## add the following into the end of ~/.bashrc
+```bash
 export CUDA_VER=10.0
 export PATH=${PATH}:/usr/local/cuda/bin
 export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:/usr/local/cuda/lib64
+```
 
+## activate ~/.bashrc
+```bash
 source ~/.bashrc
 ```
 
