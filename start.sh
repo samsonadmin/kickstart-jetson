@@ -27,7 +27,7 @@ video_file_for_v4l2src_pipeline=""
 test_videos_dir="/home/jetsonnano/test-videos"
 
 #map it to HDMI output
-export DISPLAY=:0
+export DISPLAY=:1
 #if this doesn't work,
 #export DISPLAY=:1.0
 
@@ -35,18 +35,18 @@ export DISPLAY=:0
 #today=`date +%Y-%m-%d.%H:%M:%S`
 today=`date +%Y%m%d-%H%M%S`
 
-yolo_detection_options[0,0]="Mask (Require GUI X11)"
-yolo_detection_options[0,1]="~/darknet/mask/obj.edge.data"
-yolo_detection_options[0,2]="~/darknet/mask/yolov4-tiny.cfg"
-yolo_detection_options[0,3]="~/darknet/mask/yolov4-tiny_last.weights"
-yolo_detection_options[0,4]="-thresh 0.80 -ext_output "
+yolo_detection_options[0,0]="YoloV4 CSP (Require GUI X11)"
+yolo_detection_options[0,1]="~/darknet/cfg/coco.data"
+yolo_detection_options[0,2]="~/darknet/cfg/yolov4-csp.cfg"
+yolo_detection_options[0,3]="~/darknet/yolov4-csp.weights"
+yolo_detection_options[0,4]="-thresh 0.50 -ext_output "
 
 
 yolo_detection_options[1,0]="Yolov4 - Tiny Different objects (Require GUI X11)"
 yolo_detection_options[1,1]="~/darknet/cfg/coco.data"
 yolo_detection_options[1,2]="~/darknet/cfg/yolov4-tiny.cfg"
 yolo_detection_options[1,3]="~/darknet/yolov4-tiny.weights"
-yolo_detection_options[1,4]="-thresh 0.60 -ext_output "
+yolo_detection_options[1,4]="-thresh 0.50 -ext_output "
 
 
 #pause
@@ -607,6 +607,14 @@ show_menu_yolov3_detection_options()
 		cd ~/darknet
 		wget https://github.com/AlexeyAB/darknet/releases/download/darknet_yolo_v4_pre/yolov4-tiny.weights -O yolov4-tiny.weights
 	fi
+
+	if [[ -f "yolov4-csp.weights" ]]; then
+		echo "YoloV4-csp weights exists."
+	else
+		cd ~/darknet
+		wget https://github.com/AlexeyAB/darknet/releases/download/darknet_yolo_v4_pre/yolov4-csp.weights -O yolov4-csp.weights
+	fi
+
 
 	back_title="Chosen Camera: ${VIDEO_CAMERA_INPUTS[$camera_num,1]} ${VIDEO_CAMERA_INPUTS[$camera_num,0]} ${VIDEO_CAMERA_INPUTS[$camera_num,5]}x${VIDEO_CAMERA_INPUTS[$camera_num,6]}@${VIDEO_CAMERA_INPUTS[$camera_num,7]}fps"
 

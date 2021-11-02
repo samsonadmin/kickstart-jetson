@@ -15,7 +15,7 @@ and burn ISO using [balenaEtcher](https://www.balena.io/etcher/)
 ## Step 2. Clone my opensource repo
 > This automatically do some magic stuffs
 ```bash
-git clone https://github.com/samsonadmin/kickstart-jetson.git
+git clone https://github.com/carryai/kickstart-jetson.git
 cd kickstart-jetson
 ```
 
@@ -63,83 +63,83 @@ Host Jetsonnano-192.168.2.1
 ![Visual Studio Code](https://www.mail2you.net/stem/vcs07.jpg)
 
 
-## Step 6. SSH (with Xshell into jetson)
-![Visual Studio Code](https://www.mail2you.net/stem/xshell01.jpg)
-
-![Visual Studio Code](https://www.mail2you.net/stem/xshell02.jpg)
-
-![Visual Studio Code](https://www.mail2you.net/stem/xshell03.jpg)
-
-## Step 7. Download Yolo
+## Step 6. Download Yolo
 
 ```bash
 cd
 git clone https://github.com/AlexeyAB/darknet.git
 ```
 
-## Step 8. Edit Makefile
+## Step 7. Edit Makefile
 ```bash
-vim Makefile
+nano Makefile
 ```
+
+
+## Change the following contents of the Makefile
 ```diff
 GPU=1
 CUDNN=1
 OPENCV=1
 LIBSO=1
 ```
+
+## Change the following contents of the Makefile, uncomment the lines
 ```diff
 #uncomment the line
 ARCH= -gencode arch=compute_53,code=[sm_53,compute_53]
 ```
 
+## Change the the environment file, ~/.bashrc
 ```bash
-vim /root/.bashrc
+nano ~/.bashrc
+```
 
+## add the following into the end of ~/.bashrc
+```bash
 export CUDA_VER=10.0
 export PATH=${PATH}:/usr/local/cuda/bin
 export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:/usr/local/cuda/lib64
+```
 
+## activate ~/.bashrc
+```bash
 source ~/.bashrc
 ```
 
-## Step 9. Compile the program
+## Step 8. Compile the program
 ```bash
 make -j4
 ```
 
-## Step 10. Download models & weights 
+## Step 9. Download models & weights 
+cd ~/darknet
+wget https://github.com/AlexeyAB/darknet/releases/download/darknet_yolo_v4_pre/yolov4-tiny.weights -O yolov4-tiny.weights
+
+wget https://github.com/AlexeyAB/darknet/releases/download/darknet_yolo_v4_pre/yolov4-csp.weights -O yolov4-csp.weights
+
+## Step 10. Your first inference!
 ```bash
-#model
-wget https://raw.githubusercontent.com/AlexeyAB/darknet/master/cfg/enet-coco.cfg
-#weights
-wget https://www.mail2you.net/weights/enetb0-coco_final.weights
-
-#class names
-wget https://www.mail2you.net/weights/coco.data
-wget https://www.mail2you.net/weights/classes.txt
-
-cd mask
-#class names
-wget https://www.mail2you.net/weights/mask2020/obj.edge.data
-wget https://www.mail2you.net/weights/mask2020/classes.txt
+./darknet detector test ~/darknet/cfg/coco.data ~/darknet/cfg/yolov4-csp.cfg ~/darknet/yolov4-csp.weights data/person.jpg
 ```
 
-## Step 11. Your first inference!
+## Step 11. Lets test with USB Camera
 ```bash
-./darknet detector test cfg/coco.data yolov3-tiny-prn.cfg yolov3-tiny-prn.weights data/person.jpg
+cd ~/darknet
+export DISPLAY=:1
+
+./darknet detector demo  ~/darknet/cfg/coco.data  ~/darknet/cfg/yolov4-csp.cfg   ~/darknet/yolov4-csp.weights    -thresh 0.50 -ext_output \
+'v4l2src io-mode=2 device=/dev/video0 ! image/jpeg, width=1920, height=1080, framerate=30/1 ! jpegdec ! video/x-raw !  nvvidconv ! video/x-raw(memory:NVMM), format=(string)I420 ! nvvidconv ! video/x-raw, format=(string)BGRx ! videoconvert ! video/x-raw, format=BGR ! appsink max-buffers=1 drop=true sync=false'  
+
+
 ```
 
-## Step 12. Lets test on video
-```bash
-./darknet detector test cfg/coco.data yolov3-tiny-prn.cfg yolov3-tiny-prn.weights data/person.jpg
-```
-
-## Step 13. Take Pictures and build your own training
+## Step 12. Take Pictures and build your own training
 > Let's take some time and allow me to explain what are the important things you need to consider when doing your training
 > 
 
-## Step 14. Train your weight
-> However, training is almost impossible to be done on jetson nano, lets do it on cloud, we will use [Google Colab](https://colab.research.google.com/drive/1lfcAim-fHge2L9fdD49eu8LNUaAMgk4G?usp=sharing)
+## Step 13. Train your weight
+> However, training is almost impossible to be done on jetson nano, lets do it on cloud, we will use [Google Colab](https://colab.research.google.com/drive/1czTxmIIcMkqRdgbsTOOmO4ecBeFIrKP8)
 ```bash
  ./darknet detector train "/training-data/face_mask/obj-google.data"  "/training-data/face_mask/yolov3-tiny-prn-832.cfg"  "/training-data/face_mask/yolov3-tiny-prn-832_last.weights" -dont_show
  ```
@@ -153,51 +153,13 @@ wget https://www.mail2you.net/weights/mask2020/classes.txt
 See [https://www.jetsonhacks.com/2019/06/07/jetson-nano-gpio/](https://www.jetsonhacks.com/2019/06/07/jetson-nano-gpio/)
 See [https://github.com/NVIDIA/jetson-gpio](https://github.com/NVIDIA/jetson-gpio)
 
-
+##　Running Jetson-IO
+After the setup, we’re ready to go:
 ```bash
-sudo -H pip3 install Jetson.GPIO luma.led_matrix
-
-sudo groupadd -f -r gpio
-sudo usermod -a -G gpio your_user_name
-sudo usermod -a -G gpio jetsonnano
-
-sudo cp /lib/udev/rules.d/60-jetson-gpio-common.rules  /etc/udev/rules.d/
-sudo reboot
-```
-
-https://forums.developer.nvidia.com/t/read-write-permission-ttyths1/81623
-
-created a udev rule: /etc/udev/rules.d/55-tegraserial.rules
-KERNEL=="ttyTHS*", MODE="0666"
-```bash
-sudo /etc/rc.local
-chmod 666 /dev/ttyTHS1
-```
-
-
-## Enable SPI on jetson nano
-
-https://github.com/gtjoseph/jetson-nano-support/tree/l4t_32.2.1
-
-
-## For SPI, https://github.com/gtjoseph/jetson-nano-support/tree/master
-
-```bash
-wget https://github.com/gtjoseph/jetson-nano-support/releases/download/v1.0.2/flash-dtb-update-2019-12-09.tar.gz
-tar -zxvf flash-dtb-update-2019-12-09.tar.gz
-```
-
-
-## Using the max7219 matrix LED
-```bash
-pip install luma.led_matrix
-```
-
-### hardware:
-https://raspi.tv/2013/8-x-8-led-array-driven-by-max7219-on-the-raspberry-pi-via-python
-
-### Software:
-https://github.com/rm-hull/luma.led_matrix
+sudo /opt/nvidia/jetson-io/jetson-io.py
+ ```
+ ![Visual Studio Code](https://i0.wp.com/www.jetsonhacks.com/wp-content/uploads/2020/05/JetsonIO-Main.png?w=635&ssl=1)
+ 
 
 
 ## Manage Autostart
@@ -230,7 +192,9 @@ https://www.prusaprinters.org/prints/1420-nvidia-jetson-nano-case-nanomesh-mini
 ```
 
 # Save as a copy in Drive
-https://colab.research.google.com/drive/1lfcAim-fHge2L9fdD49eu8LNUaAMgk4G
+https://colab.research.google.com/drive/1czTxmIIcMkqRdgbsTOOmO4ecBeFIrKP8
+
+
 
 # Connections
 [How to connect](CONNECTION-README.md)
